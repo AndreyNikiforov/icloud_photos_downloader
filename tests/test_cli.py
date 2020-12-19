@@ -7,6 +7,8 @@ import pytest
 from click.testing import CliRunner
 from icloudpd.base import main
 import inspect
+from icloudpd import processor
+import mock
 
 vcr = VCR(decode_compressed_response=True)
 
@@ -147,3 +149,37 @@ class CliTestCase(TestCase):
             ],
         )
         assert result.exit_code == 2
+
+    def test_feature_flag(self):
+        base_dir = os.path.normpath(f"tests/fixtures/Photos/{inspect.stack()[0][3]}")
+        if os.path.exists(base_dir):
+            shutil.rmtree(base_dir)
+        os.makedirs(base_dir)
+
+        with mock.patch(
+            "icloudpd.processor.Processor.synchronize",
+        ) as patched:
+            patched.return_value=False
+
+            # Pass fixed client ID via environment variable
+            runner = CliRunner(env={
+                "CLIENT_ID": "DE309E26-942E-11E8-92F5-14109FE0B321"
+            })
+            result = runner.invoke(
+                main,
+                [
+                    "--username",
+                    "jdoe@gmail.com",
+                    "--password",
+                    "password1",
+                    "--recent",
+                    "0",
+                    "--feature",
+                    "processor2021",
+                    "-d",
+                    base_dir,
+                ],
+            )
+            print(result.output)
+            patched.assert_called_once_with("All Photos", base_dir)
+            assert result.exit_code == 0

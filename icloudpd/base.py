@@ -27,6 +27,7 @@ from icloudpd import exif_datetime
 # Must import the constants object so that we can mock values in tests.
 from icloudpd import constants
 from icloudpd.counter import Counter
+from icloudpd import processor
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
@@ -193,6 +194,12 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
     type=click.IntRange(1),
     default=1,
 )
+@click.option(
+    "--feature",
+    help="Feature flags",
+    type=click.Choice(['processor2021']),
+    multiple=True,
+)
 @click.version_option()
 # pylint: disable-msg=too-many-arguments,too-many-statements
 # pylint: disable-msg=too-many-branches,too-many-locals
@@ -224,8 +231,20 @@ def main(
         no_progress_bar,
         notification_script,
         threads_num,    # pylint: disable=W0613
+        feature,
 ):
     """Download all iCloud photos to a local directory"""
+
+    if "processor2021" in feature \
+        and not list_albums \
+        and directory:
+        result = processor.Processor().synchronize(
+            album,
+            directory,
+            # folder_structure
+        )
+        print(f"Result from Synchronize={result}")
+        sys.exit(0)
 
     logger = setup_logger()
     if only_print_filenames:

@@ -1,0 +1,314 @@
+{
+    "master_record": {
+        "recordName": "AV6CozgukSZTJL0LL7vbdONrUxPC",
+        "recordType": "CPLMaster",
+        "fields": {
+            "itemType": {
+                "value": "public.heic",
+                "type": "STRING"
+            },
+            "resJPEGThumbFingerprint": {
+                "value": "AYgeso5XO8W5yzCR7upZ3EPx6C+0",
+                "type": "STRING"
+            },
+            "filenameEnc": {
+                "value": "SU1HXzE5MzAuSEVJQw==",
+                "type": "ENCRYPTED_BYTES"
+            },
+            "resJPEGMedRes": {
+                "value": {
+                    "fileChecksum": "AX9sV4KpGQMPhgfGvik4zktQrCMX",
+                    "size": 704335,
+                    "wrappingKey": "5hSzsOeaPyuBdwz9M6n0Mw==",
+                    "referenceChecksum": "AVQejTMQaIt1yqkfM/Y2aOn70Qeb",
+                    "downloadURL": "resJPEGMedRes-MockUrl"
+                },
+                "type": "ASSETID"
+            },
+            "originalOrientation": {
+                "value": 6,
+                "type": "INT64"
+            },
+            "resJPEGMedHeight": {
+                "value": 2048,
+                "type": "INT64"
+            },
+            "resOriginalRes": {
+                "value": {
+                    "fileChecksum": "AV6CozgukSZTJL0LL7vbdONrUxPC",
+                    "size": 1497485,
+                    "wrappingKey": "3bGkTJpCPeUy1F4wRWvAKw==",
+                    "referenceChecksum": "ARKGY7OF/zCHi8yO20q70oDRzHbJ",
+                    "downloadURL": "resOriginalRes-MockUrl"
+                },
+                "type": "ASSETID"
+            },
+            "resJPEGMedFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "resJPEGThumbHeight": {
+                "value": 480,
+                "type": "INT64"
+            },
+            "resJPEGThumbWidth": {
+                "value": 360,
+                "type": "INT64"
+            },
+            "resOriginalWidth": {
+                "value": 4032,
+                "type": "INT64"
+            },
+            "resJPEGThumbFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "dataClassType": {
+                "value": 1,
+                "type": "INT64"
+            },
+            "resOriginalFingerprint": {
+                "value": "AV6CozgukSZTJL0LL7vbdONrUxPC",
+                "type": "STRING"
+            },
+            "resJPEGMedWidth": {
+                "value": 1536,
+                "type": "INT64"
+            },
+            "resJPEGThumbRes": {
+                "value": {
+                    "fileChecksum": "AYgeso5XO8W5yzCR7upZ3EPx6C+0",
+                    "size": 44477,
+                    "wrappingKey": "kkhr2bxVQJADvjano/wMng==",
+                    "referenceChecksum": "AW9lvIec8BWq8mFal9KEG7Gdrd8l",
+                    "downloadURL": "resJPEGThumbRes-MockUrl"
+                },
+                "type": "ASSETID"
+            },
+            "resOriginalFileType": {
+                "value": "public.heic",
+                "type": "STRING"
+            },
+            "resOriginalHeight": {
+                "value": 3024,
+                "type": "INT64"
+            },
+            "resJPEGMedFingerprint": {
+                "value": "AX9sV4KpGQMPhgfGvik4zktQrCMX",
+                "type": "STRING"
+            }
+        },
+        "pluginFields": {},
+        "recordChangeTag": "vku",
+        "created": {
+            "timestamp": 1608662749232,
+            "userRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+            "deviceID": "6C40C3D96D62827F061C96D8E6F395B7B251B6AFFC3EB0A1631FD0362617FAAE"
+        },
+        "modified": {
+            "timestamp": 1608662749232,
+            "userRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+            "deviceID": "6C40C3D96D62827F061C96D8E6F395B7B251B6AFFC3EB0A1631FD0362617FAAE"
+        },
+        "deleted": false,
+        "zoneID": {
+            "zoneName": "PrimarySync",
+            "ownerRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+            "zoneType": "REGULAR_CUSTOM_ZONE"
+        }
+    },
+    "asset_record": {
+        "recordName": "28220F34-8D86-4DB1-857B-4FCF97D93471",
+        "recordType": "CPLAsset",
+        "fields": {
+            "addedDate": {
+                "value": 1608662570769,
+                "type": "TIMESTAMP"
+            },
+            "resJPEGThumbFingerprint": {
+                "value": "Acj9TQQ5zrJ2gRLR0b6KAfMPQOy3",
+                "type": "STRING"
+            },
+            "resJPEGFullFingerprint": {
+                "value": "ARjkOU9N5H/bfkhGUl5d9Nc8HKcb",
+                "type": "STRING"
+            },
+            "adjustmentType": {
+                "value": "com.apple.photo",
+                "type": "STRING"
+            },
+            "resJPEGFullHeight": {
+                "value": 4032,
+                "type": "INT64"
+            },
+            "assetSubtypeV2": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "assetHDRType": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "timeZoneOffset": {
+                "value": -28800,
+                "type": "INT64"
+            },
+            "masterRef": {
+                "value": {
+                    "recordName": "AV6CozgukSZTJL0LL7vbdONrUxPC",
+                    "action": "DELETE_SELF",
+                    "zoneID": {
+                        "zoneName": "PrimarySync",
+                        "ownerRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+                        "zoneType": "REGULAR_CUSTOM_ZONE"
+                    }
+                },
+                "type": "REFERENCE"
+            },
+            "locationEnc": {
+                "value": "YnBsaXN0MDDYAQIDBAUGBwgJCgsMCg0OD1Zjb3Vyc2VVc3BlZWRTYWx0U2xvbld2ZXJ0QWNjU2xhdFl0aW1lc3RhbXBXaG9yekFjYyNAXlLQgEsT+yMAAAAAAAAAACNAQPMzMzMzMyPAXoOeYPPgtiNAQvV+rO62ADNBwsk61Q2yLSNAQgX88hhGFwgZICYqLjY6RExVXmdweYIAAAAAAAABAQAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAiw==",
+                "type": "ENCRYPTED_BYTES"
+            },
+            "adjustmentRenderType": {
+                "value": 2,
+                "type": "INT64"
+            },
+            "resJPEGMedFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "vidComplDispScale": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "duration": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "burstFlags": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "assetSubtype": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "resJPEGThumbWidth": {
+                "value": 360,
+                "type": "INT64"
+            },
+            "vidComplVisibilityState": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "resJPEGFullWidth": {
+                "value": 3024,
+                "type": "INT64"
+            },
+            "resJPEGMedWidth": {
+                "value": 1536,
+                "type": "INT64"
+            },
+            "resJPEGFullRes": {
+                "value": {
+                    "fileChecksum": "ARjkOU9N5H/bfkhGUl5d9Nc8HKcb",
+                    "size": 2011193,
+                    "wrappingKey": "xEsQW/sCCgmjNRdfJZDsVg==",
+                    "referenceChecksum": "AT1/7EPICt0pYVomXRoxT91YsN5J",
+                    "downloadURL": "resJPEGFullRes-MockUrl"
+                },
+                "type": "ASSETID"
+            },
+            "assetDate": {
+                "value": 1608662569220,
+                "type": "TIMESTAMP"
+            },
+            "resJPEGFullFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "orientation": {
+                "value": 1,
+                "type": "INT64"
+            },
+            "resJPEGMedRes": {
+                "value": {
+                    "fileChecksum": "AburswzWCNDyntvwgUv24hP95X43",
+                    "size": 520543,
+                    "wrappingKey": "ns0/qL8nrJlEGbZVL9eSJg==",
+                    "referenceChecksum": "AerEjNHgMqRbZzO49WCzOzJnU4t5",
+                    "downloadURL": "resJPEGMedRes-MockUrl"
+                },
+                "type": "ASSETID"
+            },
+            "resJPEGMedHeight": {
+                "value": 2048,
+                "type": "INT64"
+            },
+            "isHidden": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "resJPEGThumbHeight": {
+                "value": 480,
+                "type": "INT64"
+            },
+            "vidComplDurScale": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "vidComplDurValue": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "resJPEGThumbFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "resJPEGThumbRes": {
+                "value": {
+                    "fileChecksum": "Acj9TQQ5zrJ2gRLR0b6KAfMPQOy3",
+                    "size": 71921,
+                    "wrappingKey": "FNizPotyWbjTUtLPRbwyIg==",
+                    "referenceChecksum": "ASQ2bDcNCKJm/+m7BOHAgjLesiv3",
+                    "downloadURL": "resJPEGThumbRes-MockUrl"
+                },
+                "type": "ASSETID"
+            },
+            "customRenderedValue": {
+                "value": 9,
+                "type": "INT64"
+            },
+            "isFavorite": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "resJPEGMedFingerprint": {
+                "value": "AburswzWCNDyntvwgUv24hP95X43",
+                "type": "STRING"
+            },
+            "vidComplDispValue": {
+                "value": 0,
+                "type": "INT64"
+            }
+        },
+        "pluginFields": {},
+        "recordChangeTag": "vkv",
+        "created": {
+            "timestamp": 1608662749234,
+            "userRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+            "deviceID": "6C40C3D96D62827F061C96D8E6F395B7B251B6AFFC3EB0A1631FD0362617FAAE"
+        },
+        "modified": {
+            "timestamp": 1608662749234,
+            "userRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+            "deviceID": "6C40C3D96D62827F061C96D8E6F395B7B251B6AFFC3EB0A1631FD0362617FAAE"
+        },
+        "deleted": false,
+        "zoneID": {
+            "zoneName": "PrimarySync",
+            "ownerRecordName": "_536e51deb9d2d5a7e2f6da1d31e7eca4",
+            "zoneType": "REGULAR_CUSTOM_ZONE"
+        }
+    }
+}

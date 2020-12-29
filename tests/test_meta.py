@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 import rx
 from rx import operators as ops
+import os
 
 import icloudpd.meta
 
@@ -37,7 +38,7 @@ class MetaGetTest(TestCase):
 class MetaTest(TestCase):
 
     def test_load_portrait(self):
-        with open('tests/fixtures/pairs/portrait.json',) as f:
+        with open(os.path.normpath('tests/fixtures/pairs/portrait.json'),) as f:
             photo = json.load(f)
         pair = (photo["master_record"], photo["asset_record"])
         result = icloudpd.meta.load(rx.of(pair)).pipe(ops.to_iterable()).run()
@@ -97,7 +98,7 @@ class MetaTest(TestCase):
         self.assertEqual(result,[[t,s,l]])
 
     def test_load_live_photo(self):
-        with open('tests/fixtures/pairs/livephoto.json',) as f:
+        with open(os.path.normpath('tests/fixtures/pairs/livephoto.json'),) as f:
             photo = json.load(f)
         pair = (photo["master_record"], photo["asset_record"])
         result = icloudpd.meta.load(rx.of(pair)).pipe(ops.to_iterable()).run()

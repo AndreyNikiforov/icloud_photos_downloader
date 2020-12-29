@@ -95,3 +95,27 @@ class MetaTest(TestCase):
         pair[1]["fields"]["resJPEGFullRes"]["value"]["downloadURL"] = l
         result = icloudpd.meta._get_url(pair).pipe(ops.to_iterable()).run()
         self.assertEqual(result,[[t,s,l]])
+
+    def test_load_live_photo(self):
+        with open('tests/fixtures/pairs/livephoto.json',) as f:
+            photo = json.load(f)
+        pair = (photo["master_record"], photo["asset_record"])
+        result = icloudpd.meta.load(rx.of(pair)).pipe(ops.to_iterable()).run()
+        print(result)
+        self.assertEqual(result,[
+            [
+                'AdEGM+k3qUpNtCqmkkiooAFpZyxJ', 
+                1604492664396, 
+                'IMG_0512.HEIC', 
+                [
+                    'public.heic', 
+                    1274777, 
+                    'resOriginalRes-MockURL'
+                ],
+                [
+                    'com.apple.quicktime-movie',
+                    4138524,
+                    'resOriginalVidComplRes-MockURL'
+                ]
+            ],
+        ])

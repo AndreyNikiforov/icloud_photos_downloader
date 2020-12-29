@@ -1,0 +1,310 @@
+{
+    "master_record": {
+        "recordName": "AdEGM+k3qUpNtCqmkkiooAFpZyxJ",
+        "recordType": "CPLMaster",
+        "fields": {
+            "resVidSmallHeight": {
+                "value": 581,
+                "type": "INT64"
+            },
+            "itemType": {
+                "value": "public.heic",
+                "type": "STRING"
+            },
+            "resJPEGThumbFingerprint": {
+                "value": "AfWu4gm6dy+M0GyE0RVLxDbRCavU",
+                "type": "STRING"
+            },
+            "filenameEnc": {
+                "value": "SU1HXzA1MTIuSEVJQw==",
+                "type": "ENCRYPTED_BYTES"
+            },
+            "originalOrientation": {
+                "value": 6,
+                "type": "INT64"
+            },
+            "resOriginalVidComplFileType": {
+                "value": "com.apple.quicktime-movie",
+                "type": "STRING"
+            },
+            "resJPEGMedFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "resOriginalVidComplWidth": {
+                "value": 1308,
+                "type": "INT64"
+            },
+            "resJPEGThumbWidth": {
+                "value": 360,
+                "type": "INT64"
+            },
+            "resOriginalWidth": {
+                "value": 4032,
+                "type": "INT64"
+            },
+            "dataClassType": {
+                "value": 1,
+                "type": "INT64"
+            },
+            "resVidMedFileType": {
+                "value": "com.apple.quicktime-movie",
+                "type": "STRING"
+            },
+            "resOriginalFingerprint": {
+                "value": "AdEGM+k3qUpNtCqmkkiooAFpZyxJ",
+                "type": "STRING"
+            },
+            "resJPEGMedWidth": {
+                "value": 1536,
+                "type": "INT64"
+            },
+            "resVidMedRes": {
+                "value": {
+                    "fileChecksum": "AZTz9DVONaCedGb8iw+8OdhIJhEM",
+                    "size": 1715359,
+                    "wrappingKey": "wUoLn8nyz6nC7eNUk+hY4Q==",
+                    "referenceChecksum": "AVRG1/4Aifyf3cEjliIKhv8ly3Nv",
+                    "downloadURL": "https://cvws.icloud-content.com/B/AZTz9DVONaCedGb8iw-8OdhIJhEMAVRG1_4Aifyf3cEjliIKhv8ly3Nv/${f}?o=Ai-efEM9s9QNbQ4tQN5MrVx7m_L7qJeIA39GQkVfT-Wk&v=1&x=3&a=CAogE_hk-Md609eY0NGM2dJC5I9TzopZ-LWKgK7jsWxHo3gSaxCRyOqn2S4YkaXGqdkuIgEAUgRIJhEMWgQly3NvaiVLPCun2B6nVZET-rAd1AzAh2i64cHOKaWRM1uqZA7m1XTCRcJPciVJH8C9Epc4MqwS2fgQmZvM3F63S3sqzsi_JROTpYEvkD15-pZx&e=1604525855&fl=&r=5e015799-e31e-468a-9fac-29fbbda531d5-1&k=wUoLn8nyz6nC7eNUk-hY4Q&ckc=com.apple.photos.cloud&ckz=PrimarySync&y=1&p=42&s=mmso5BXhO6pHP41o3ISiUxiXYYI"
+                },
+                "type": "ASSETID"
+            },
+            "resOriginalHeight": {
+                "value": 3024,
+                "type": "INT64"
+            },
+            "resVidSmallFingerprint": {
+                "value": "Ad+XaqXy4Q8LTICOmeix0BzOfB2j",
+                "type": "STRING"
+            },
+            "resVidMedWidth": {
+                "value": 654,
+                "type": "INT64"
+            },
+            "resJPEGMedRes": {
+                "value": {
+                    "fileChecksum": "AZucDQu5QSe3HI1ViXZCXHej9/tz",
+                    "size": 600421,
+                    "wrappingKey": "Cw8I5ZXeAVX91uAuEDIOvA==",
+                    "referenceChecksum": "AY58bifa09Yn+hTXOxKhtCBaBGcU",
+                    "downloadURL": "https://cvws.icloud-content.com/B/AZucDQu5QSe3HI1ViXZCXHej9_tzAY58bifa09Yn-hTXOxKhtCBaBGcU/${f}?o=An-K1-T-bEfVXeJNcUK4WBeoKnPobgOIPTZ7_nY1V-n6&v=1&x=3&a=CAogGpRewfTJyuw5wvVXEA7vpxdTAB8twKLtyGswQbMWf7ESaxCUyOqn2S4YlKXGqdkuIgEAUgSj9_tzWgRaBGcUaiVaFhPC-h_Vj6YkyukN_cwW8gD8nA8d_Y3nnI-h6FEVgQ0WzO1AciW5P_KTs8GatdkEdrJd3j4jujm26fVkpHPfiAsNHvl5fY6YLWJl&e=1604525855&fl=&r=5e015799-e31e-468a-9fac-29fbbda531d5-1&k=Cw8I5ZXeAVX91uAuEDIOvA&ckc=com.apple.photos.cloud&ckz=PrimarySync&y=1&p=42&s=ukhcieZg2ng2qCknN0vr-46IHrE"
+                },
+                "type": "ASSETID"
+            },
+            "resOriginalVidComplFingerprint": {
+                "value": "AefXM8DiPWTeaP6s48zAoXBYbgxz",
+                "type": "STRING"
+            },
+            "resJPEGMedHeight": {
+                "value": 2048,
+                "type": "INT64"
+            },
+            "resOriginalRes": {
+                "value": {
+                    "fileChecksum": "AdEGM+k3qUpNtCqmkkiooAFpZyxJ",
+                    "size": 1274777,
+                    "wrappingKey": "B422Qfl4FE7Tu0hXP5AoaA==",
+                    "referenceChecksum": "AT7MSuOO6Hpj2RWRwDMqBcMDZDj+",
+                    "downloadURL": "resOriginalRes-MockURL"
+                },
+                "type": "ASSETID"
+            },
+            "resVidSmallFileType": {
+                "value": "com.apple.quicktime-movie",
+                "type": "STRING"
+            },
+            "resVidSmallRes": {
+                "value": {
+                    "fileChecksum": "Ad+XaqXy4Q8LTICOmeix0BzOfB2j",
+                    "size": 482234,
+                    "wrappingKey": "oUZNh9c9vPV2/+Y7aLNJug==",
+                    "referenceChecksum": "AfNcmC2IO3jSBw+5iePFuH0Q71Iu",
+                    "downloadURL": "https://cvws.icloud-content.com/B/Ad-XaqXy4Q8LTICOmeix0BzOfB2jAfNcmC2IO3jSBw-5iePFuH0Q71Iu/${f}?o=AnAqiHdMPmbVr24DjHuVudmpYlxPv5O7VVMbEC_Daw4q&v=1&x=3&a=CAogFFC_G9aOHhEV1g6urxBK933WZDfVFgDKY5WUutc_qkISaxCVyOqn2S4YlaXGqdkuIgEAUgTOfB2jWgQQ71IuaiX5biwa5corM_rRN7EFLN8tvqpwbic4DyUr8fBjdUEL3ZzpNz5KciUrG7XXzllHnO-CqIX9uNh5OngQSusM5p5m54431VtuKrrWpcJ7&e=1604525855&fl=&r=5e015799-e31e-468a-9fac-29fbbda531d5-1&k=oUZNh9c9vPV2_-Y7aLNJug&ckc=com.apple.photos.cloud&ckz=PrimarySync&y=1&p=42&s=6KzPhbygXtXiHI6cO3POGoyaBFc"
+                },
+                "type": "ASSETID"
+            },
+            "resJPEGThumbHeight": {
+                "value": 480,
+                "type": "INT64"
+            },
+            "resOriginalVidComplRes": {
+                "value": {
+                    "fileChecksum": "AefXM8DiPWTeaP6s48zAoXBYbgxz",
+                    "size": 4138524,
+                    "wrappingKey": "6TVBVOJiqcQ3yVZHAuXbYg==",
+                    "referenceChecksum": "AZ0uGx/OW89IcqDJM/a5s9JsHSAr",
+                    "downloadURL": "resOriginalVidComplRes-MockURL"
+                },
+                "type": "ASSETID"
+            },
+            "resJPEGThumbFileType": {
+                "value": "public.jpeg",
+                "type": "STRING"
+            },
+            "resVidMedFingerprint": {
+                "value": "AZTz9DVONaCedGb8iw+8OdhIJhEM",
+                "type": "STRING"
+            },
+            "resVidMedHeight": {
+                "value": 872,
+                "type": "INT64"
+            },
+            "resOriginalVidComplHeight": {
+                "value": 1744,
+                "type": "INT64"
+            },
+            "resVidSmallWidth": {
+                "value": 436,
+                "type": "INT64"
+            },
+            "resJPEGThumbRes": {
+                "value": {
+                    "fileChecksum": "AfWu4gm6dy+M0GyE0RVLxDbRCavU",
+                    "size": 56756,
+                    "wrappingKey": "xMfsjV7K5Mh8cdR+/3ixkQ==",
+                    "referenceChecksum": "AYzLFxTlgSi0vEJ+cspzIxSa1HNi",
+                    "downloadURL": "https://cvws.icloud-content.com/B/AfWu4gm6dy-M0GyE0RVLxDbRCavUAYzLFxTlgSi0vEJ-cspzIxSa1HNi/${f}?o=Ame-3lJl2AvMQXWu1xKpXos6dPtrzkncgbsqHOzi3GBg&v=1&x=3&a=CAog7JE9ItQa14HYMdbEx-HMdd2CdWafHUCvuhEWjuGwA2kSaxCVyOqn2S4YlaXGqdkuIgEAUgTRCavUWgSa1HNiaiWUxSKTJXmXT4qw__jqqoEsbXLNEoywDFwmT1KUF45qzIWng6OFciVhRhgi7mZFmg0E4P1BVsvoQYlM4lYCXTkTzVyPSI_-0aLrWBGC&e=1604525855&fl=&r=5e015799-e31e-468a-9fac-29fbbda531d5-1&k=xMfsjV7K5Mh8cdR-_3ixkQ&ckc=com.apple.photos.cloud&ckz=PrimarySync&y=1&p=42&s=ERx1uQS7l-ABH4qXdSZOS4DGmSU"
+                },
+                "type": "ASSETID"
+            },
+            "resOriginalFileType": {
+                "value": "public.heic",
+                "type": "STRING"
+            },
+            "resJPEGMedFingerprint": {
+                "value": "AZucDQu5QSe3HI1ViXZCXHej9/tz",
+                "type": "STRING"
+            }
+        },
+        "pluginFields": {},
+        "recordChangeTag": "60e8",
+        "created": {
+            "timestamp": 1604492831401,
+            "userRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+            "deviceID": "27C7D10272CA3C14A5C44859F930E8371E52D3EAD982F45A07AE585F6079442F"
+        },
+        "modified": {
+            "timestamp": 1604492831401,
+            "userRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+            "deviceID": "27C7D10272CA3C14A5C44859F930E8371E52D3EAD982F45A07AE585F6079442F"
+        },
+        "deleted": false,
+        "zoneID": {
+            "zoneName": "PrimarySync",
+            "ownerRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+            "zoneType": "REGULAR_CUSTOM_ZONE"
+        }
+    },
+    "asset_record": {
+        "recordName": "0A5F7B13-99D2-4938-A105-0E659C6E2B4C",
+        "recordType": "CPLAsset",
+        "fields": {
+            "assetDate": {
+                "value": 1604492664396,
+                "type": "TIMESTAMP"
+            },
+            "orientation": {
+                "value": 6,
+                "type": "INT64"
+            },
+            "addedDate": {
+                "value": 1604492665346,
+                "type": "TIMESTAMP"
+            },
+            "assetSubtypeV2": {
+                "value": 2,
+                "type": "INT64"
+            },
+            "assetHDRType": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "timeZoneOffset": {
+                "value": 3600,
+                "type": "INT64"
+            },
+            "masterRef": {
+                "value": {
+                    "recordName": "AdEGM+k3qUpNtCqmkkiooAFpZyxJ",
+                    "action": "DELETE_SELF",
+                    "zoneID": {
+                        "zoneName": "PrimarySync",
+                        "ownerRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+                        "zoneType": "REGULAR_CUSTOM_ZONE"
+                    }
+                },
+                "type": "REFERENCE"
+            },
+            "locationEnc": {
+                "value": "YnBsaXN0MDDYAQIDBAUGBwgJCgsMCg0OD1Zjb3Vyc2VVc3BlZWRTYWx0U2xvbld2ZXJ0QWNjU2xhdFl0aW1lc3RhbXBXaG9yekFjYyNAcKW/wCb3DyMAAAAAAAAAACNATMzMzMzMzSNAItduSotpgCNASjjxAjY7JjNBwqlqfIKPXCNAUEAAAAAAAAgZICYqLjY6RExVXmdweYIAAAAAAAABAQAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAiw==",
+                "type": "ENCRYPTED_BYTES"
+            },
+            "adjustmentRenderType": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "vidComplDispScale": {
+                "value": 1000000000,
+                "type": "INT64"
+            },
+            "isHidden": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "duration": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "burstFlags": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "assetSubtype": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "vidComplDurScale": {
+                "value": 1000000000,
+                "type": "INT64"
+            },
+            "vidComplDurValue": {
+                "value": 2870000000,
+                "type": "INT64"
+            },
+            "vidComplVisibilityState": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "customRenderedValue": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "isFavorite": {
+                "value": 0,
+                "type": "INT64"
+            },
+            "vidComplDispValue": {
+                "value": 1434576541,
+                "type": "INT64"
+            }
+        },
+        "pluginFields": {},
+        "recordChangeTag": "60e9",
+        "created": {
+            "timestamp": 1604492831401,
+            "userRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+            "deviceID": "27C7D10272CA3C14A5C44859F930E8371E52D3EAD982F45A07AE585F6079442F"
+        },
+        "modified": {
+            "timestamp": 1604492831401,
+            "userRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+            "deviceID": "27C7D10272CA3C14A5C44859F930E8371E52D3EAD982F45A07AE585F6079442F"
+        },
+        "deleted": false,
+        "zoneID": {
+            "zoneName": "PrimarySync",
+            "ownerRecordName": "_ab776cbd7a4be817e6258511022b3e3c",
+            "zoneType": "REGULAR_CUSTOM_ZONE"
+        }
+    }
+}

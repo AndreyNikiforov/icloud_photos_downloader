@@ -21,29 +21,10 @@ def _get(
     node = source.get(paths[0])
     return _get(node, *paths[1:])
 
-def _get_id(
-    source: Tuple[Mapping[str, Any],
-    Mapping[str, Any]],
+def _get_tuple(
+    *args: Tuple,
+    count: int,
     scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
-    """
-        Gets ID of the photo
-    """
-    def _of(*args):
-        return rx.from_iterable(args, scheduler).pipe(
-            ops.flat_map(lambda x: _get(*x, scheduler=scheduler)),
-        )
-    (master_record, _) = source
-    return _of(
-            (master_record, "recordName")
-        )
-
-def _get_url(
-    source: Tuple[Mapping[str, Any],
-    Mapping[str, Any]],
-    scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
-    """
-        Gets url meta data (type, size, link)
-    """
     def _dict_list(list_of_dictionaries):
         """
             Convert list of maps {index:value} to the list of ordered values
@@ -55,56 +36,98 @@ def _get_url(
         for i in range(len(inter_dictionary)):  # pylint: disable=C0200
             yield inter_dictionary[i]
 
-    def _of(*args):
-        return rx.from_iterable(args, scheduler).pipe(
-            # flat_map does not guarantee order, so we have to deal with indexes, dict
-            ops.flat_map_indexed(
-                lambda x, i: _get(*x, scheduler=scheduler).pipe(
+    return rx.from_iterable(args, scheduler).pipe(
+        # flat_map does not guarantee order, so we have to deal with indexes, dict
+        ops.flat_map_indexed(
+            lambda x, i: _get(*x, scheduler=scheduler).pipe(
                     ops.map(lambda v: {i: v})
-                    )
-                ),
-            ops.buffer_with_count(3),
-            ops.map(lambda x: list(_dict_list(x))),
-            ops.filter(lambda x: len(x) == 3),
+                )
+            ),
+        ops.buffer_with_count(count),
+        ops.filter(lambda x: len(x) == count),
+        ops.map(lambda x: list(_dict_list(x))),
+    )
+
+def _get_single(
+    *args: Tuple,
+    scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
+    return rx.from_iterable(args, scheduler).pipe(
+        ops.flat_map(lambda x: _get(*x, scheduler=scheduler)),
+    )
+
+def _get_id(
+    source: Tuple[Mapping[str, Any],
+    Mapping[str, Any]],
+    scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
+    """
+        Gets ID of the photo
+    """
+    (master_record, _) = source
+    return _get_single(
+            (master_record, "recordName"),
+            scheduler=scheduler,
         )
+
+def _get_url(
+    source: Tuple[Mapping[str, Any], Mapping[str, Any]],
+    scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
+    """
+        Gets url meta data (type, size, link)
+    """
     (master_record, asset_record) = source
-    return _of(
+    return _get_tuple(
             (asset_record, "fields", "resJPEGFullFileType", "value"),
             (asset_record, "fields", "resJPEGFullRes", "value", "size"),
             (asset_record, "fields", "resJPEGFullRes", "value", "downloadURL"),
+            count=3,
+            scheduler=scheduler,
         ).pipe(
             ops.concat(
-                _of(
+                _get_tuple(
                     (master_record, "fields", "resOriginalFileType", "value"),
                     (master_record, "fields", "resOriginalRes", "value", "size"),
                     (master_record, "fields", "resOriginalRes", "value", "downloadURL"),
+                    count=3,
+                    scheduler=scheduler,
                 ),
-                _of(
+                _get_tuple(
                     (master_record, "fields", "resOriginalFileType", "value"),
                     (master_record, "fields", "resOriginalRes", "value", "size"),
                     (master_record, "fields", "resOriginalRes", "value", "downloadURL"),
+                    count=3,
+                    scheduler=scheduler,
                 ),
             ),
             ops.take(1)
         )
 
-def _get_filename(
-    source: Tuple[Mapping[str, Any],
-    Mapping[str, Any]],
+def _get_compl_url(
+    source: Tuple[Mapping[str, Any], Mapping[str, Any]],
     scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
-
-    def _of(*args):
-        return rx.from_iterable(args, scheduler).pipe(
-            ops.flat_map(lambda x: _get(*x, scheduler=scheduler)),
+    """
+        Gets url meta data (type, size, link) for compl video (==live photo)
+    """
+    (master_record, _) = source
+    return _get_tuple(
+            (master_record, "fields", "resOriginalVidComplFileType", "value"),
+            (master_record, "fields", "resOriginalVidComplRes", "value", "size"),
+            (master_record, "fields", "resOriginalVidComplRes", "value", "downloadURL"),
+            count=3,
+            scheduler=scheduler,
         )
+
+def _get_filename(
+    source: Tuple[Mapping[str, Any], Mapping[str, Any]],
+    scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
 
     (master_record, _) = source
 
     import re   # pylint: disable=C0415
     import base64 # pylint: disable=C0415
 
-    return _of(
+    return _get_single(
         (master_record, "fields", "filenameEnc", "value"),
+        scheduler=scheduler,
     ).pipe(
         ops.map(lambda x: base64.b64decode(x).decode('utf-8')),
         ops.concat(_get_id(source, scheduler).pipe(
@@ -115,19 +138,14 @@ def _get_filename(
     )
 
 def _get_asset_date(
-    source: Tuple[Mapping[str, Any],
-    Mapping[str, Any]],
+    source: Tuple[Mapping[str, Any], Mapping[str, Any]],
     scheduler: Optional[rx.typing.Scheduler]=None) -> rx.typing.Observable:
-
-    def _of(*args):
-        return rx.from_iterable(args, scheduler).pipe(
-            ops.flat_map(lambda x: _get(*x, scheduler=scheduler)),
-        )
 
     (_, asset_record) = source
 
-    return _of(
+    return _get_single(
         (asset_record, "fields", "assetDate", "value"),
+        scheduler=scheduler,
     ).pipe(
         ops.concat(rx.return_value(0, scheduler)),
         ops.take(1),
@@ -146,8 +164,9 @@ def load(
                     _get_asset_date(x, scheduler),
                     _get_filename(x, scheduler),
                     _get_url(x, scheduler),
+                    _get_compl_url(x, scheduler),
                 ),
-                ops.buffer_with_count(4),
+                ops.buffer_with_count(5),
             ),
         ),
     )

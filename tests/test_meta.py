@@ -10,29 +10,29 @@ import icloudpd.meta
 
 class MetaGetTest(TestCase):
 
-    @given(s=st.text())
+    @given(s=st.text() | st.integers() | st.booleans() | st.floats())
     def test_get_valid_leaf(self, s):
         source = defaultdict(dict)
         source["level1"]["level2"] = s
         result = icloudpd.meta._get(source, "level1", "level2").pipe(ops.to_iterable()).run()
         self.assertEqual(result, [s])
 
-    @given(i=st.integers())
-    def test_get_long_path_returns_empty(self, i):
+    @given(s=st.text() | st.integers() | st.booleans() | st.floats())
+    def test_get_long_path_returns_empty(self, s):
         source = defaultdict(dict)
-        source["level1"]["level2"] = i
+        source["level1"]["level2"] = s
         result = icloudpd.meta._get(source, "level1", "level2", "level3").pipe(ops.to_iterable()).run()
         self.assertEqual(result,[])
 
-    @given(i=st.integers())
-    def test_get_short_path_returns_dict_node(self, i):
+    @given(s=st.text() | st.integers() | st.booleans() | st.floats())
+    def test_get_short_path_returns_dict_node(self, s):
         source = defaultdict(dict)
         source["level1"] = defaultdict(dict)
         source["level1"]["sublevel11"] = defaultdict(dict)
         source["level1"]["sublevel11"]["sublevel12"] = defaultdict(dict)
-        source["level1"]["sublevel11"]["sublevel12"]["level2"] = i
+        source["level1"]["sublevel11"]["sublevel12"]["level2"] = s
         result = icloudpd.meta._get(source, "level1", "sublevel11", "sublevel12").pipe(ops.to_iterable()).run()
-        self.assertEqual(result,[{ "level2": i}])
+        self.assertEqual(result,[{ "level2": s}])
 
 class MetaTest(TestCase):
 

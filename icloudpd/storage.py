@@ -2,6 +2,8 @@
     Interface to persistent storage
 """
 from typing import Optional #, Any, Mapping, Tuple
+import os
+
 # import collections.abc
 import rx
 from rx import operators as ops
@@ -42,4 +44,21 @@ def save_file(
         ops.concat(
             rx.return_value(path, scheduler)
         )
+    )
+
+def save_file_with_rename(
+    path: str,
+    saver: rx.typing.Callable[[str], rx.typing.Observable[str]]
+    ) -> rx.typing.Observable[str]:
+    """
+        Uses temp file as a source and renames to destination once downloading completes
+    """
+    temp_path = path + '.part'
+    return saver(
+        temp_path
+    ).pipe(
+        ops.do(
+            rx.core.Observer(lambda x: os.rename(temp_path, path))
+        ),
+        ops.map(lambda x: path),
     )

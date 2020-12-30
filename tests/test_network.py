@@ -31,3 +31,21 @@ class NetworkTest(TestCase):
         ).run()
         self.assertEqual(len(result), size, "chunk count")
         self.assertEqual(sum(map(len, result)), 1024 * size, "downloaded size")
+
+    def test_fetch_meta(self):
+        import pyicloud
+        import vcr
+        with vcr.use_cassette("tests/vcr_cassettes/listing_photos.yml") as cass:
+            self.assertEqual(len(cass), 6, "Cassette Content")
+            context = pyicloud.PyiCloudService(
+                "jdoe@gmail.com", "password1",
+                client_id="DE309E26-942E-11E8-92F5-14109FE0B321")
+            results = icloudpd.network.fetch_meta(
+                context,
+                "All Photos"
+            ).pipe(
+                ops.take(100),
+                ops.to_iterable()
+            ).run()
+            self.assertEqual(cass.play_count, 4, "Cassette Content Played") # there are two more requests in cassette, don;t know what they are
+        self.assertEqual(len(results), 100, "Result")

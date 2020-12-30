@@ -6,3 +6,4 @@ requests>=2.20.0
 tqdm==4.54.1
 piexif==1.1.3
 rx==3.1.1
+pyicloud==0.9.7

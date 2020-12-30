@@ -13,7 +13,7 @@ __pycache__
 .coverage
 .coverage.*
 .git
-tests/fixures
+tests/fixures/Photos
 tests/__pycache__
 .venv
 venv

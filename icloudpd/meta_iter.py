@@ -1,7 +1,7 @@
 """
     Loads metadata
 """
-from typing import Any, Mapping, Tuple, Iterable
+from typing import Any, Mapping, Tuple, Iterable, Callable
 import collections.abc
 import itertools as it
 
@@ -98,13 +98,6 @@ def _get_filename(source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> Iterab
         ),
     )
 
-def _get_fallback_filename(source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> Iterable[str]:
-    import re   # pylint: disable=C0415
-    yield from map(
-        lambda x: re.sub('[^0-9a-zA-Z]', '_', x)[0:12],
-        _get_id(source)
-    )
-
 def _get_asset_timestamp(source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> Iterable[int]:
 
     (_, asset_record) = source
@@ -114,41 +107,82 @@ def _get_asset_timestamp(source: Tuple[Mapping[str, Any], Mapping[str, Any]]) ->
         ["fields", "assetDate", "value"]
     )
 
+def filename_default_to_id(source) -> Iterable[str]:
+    """
+        Strategy for selecting filename and falling back to id-based file name
+    """
 
-def load(source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> \
-    Iterable:
+    yield from it.islice(
+        it.chain(
+            _get_filename(source),
+            map(
+                icloudpd.util.make_valid_filename,
+                _get_id(source),
+            )
+        ),
+        1,
+    )
+
+def timestamp_default_zero(source) -> Iterable[int]:
+    """
+        Takes asset date as timestamp and fallsback to 0
+    """
+    yield from it.islice(
+        it.chain(
+            _get_asset_timestamp(source),
+            icloudpd.util.once(0),
+        ),
+        1,
+    )
+
+def url_adjustment_default_to_original(source) -> Iterable[Iterable[Any]]:
+    """
+        Strategy that takes adjustment meta (type, size, url) and falls back to original
+        Adjustments are portrait photos and edits
+    """
+    yield from it.islice(
+        it.chain(
+            _get_url_adjustment(source),
+            _get_url_original(source),
+        ),
+        1,
+    )
+
+def load( # pylint: disable=R0913
+    source: Tuple[Mapping[str, Any], Mapping[str, Any]],
+    id_strategy: Callable[[Tuple[Mapping[str, Any], Mapping[str, Any]]], Iterable[str]] = _get_id,
+    timestamp_strategy:
+        Callable[
+            [Tuple[Mapping[str, Any], Mapping[str, Any]]],
+            Iterable[int]
+        ] = timestamp_default_zero,
+    filename_strategy:
+        Callable[
+            [Tuple[Mapping[str, Any], Mapping[str, Any]]],
+            Iterable[str]
+        ] = filename_default_to_id,
+    main_url_strategy:
+        Callable[
+            [Tuple[Mapping[str, Any], Mapping[str, Any]]],
+            Iterable[Iterable[Any]]
+        ] = url_adjustment_default_to_original,
+    complimentary_url_strategy:
+        Callable[
+            [Tuple[Mapping[str, Any], Mapping[str, Any]]],
+            Iterable[Iterable[Any]]
+        ] = _get_url_complimentary,
+    ) -> Iterable:
     """
         Loads asset attributes from tuple of records into Asset object
     """
 
-    def _once(i):
-        yield i
-
     yield from icloudpd.util.buffer_with_count(
         5,
         it.chain(
-            _get_id(source),
-            it.islice(
-                it.chain(
-                    _get_asset_timestamp(source),
-                    _once(0),
-                ),
-                1,
-            ),
-            it.islice(
-                it.chain(
-                    _get_filename(source),
-                    _get_fallback_filename(source),
-                ),
-                1,
-            ),
-            it.islice(
-                it.chain(
-                    _get_url_adjustment(source),
-                    _get_url_original(source),
-                ),
-                1,
-            ),
-            _get_url_complimentary(source),
+            id_strategy(source),
+            timestamp_strategy(source),
+            filename_strategy(source),
+            main_url_strategy(source),
+            complimentary_url_strategy(source),
         ),
     )

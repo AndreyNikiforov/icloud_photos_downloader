@@ -1,13 +1,12 @@
 from unittest import TestCase
-from hypothesis import given
+from hypothesis import given, settings, HealthCheck
 import hypothesis.strategies as st
 import json
 from collections import defaultdict
-import rx
-from rx import operators as ops
 import os
 
 import icloudpd.meta_iter
+import icloudpd.util
 
 class MetaGetTest_Iter(TestCase):
 
@@ -45,7 +44,7 @@ class MetaTest_Iter(TestCase):
             photo = json.load(f)
         pair = (photo["master_record"], photo["asset_record"])
         result = list(icloudpd.meta_iter.load(pair))
-        
+        # print(result)
         self.assertEqual(result,[
             (
                 'AV6CozgukSZTJL0LL7vbdONrUxPC', 
@@ -65,13 +64,6 @@ class MetaTest_Iter(TestCase):
         pair[0]["recordName"] = s
         result = list(icloudpd.meta_iter._get_filename(pair))
         self.assertEqual(result,[])
-
-    @given(s=st.text(min_size=1, max_size=5))
-    def test_get_fallback_filename_iter(self, s):
-        pair = (defaultdict(dict), defaultdict(dict))
-        pair[0]["recordName"] = s
-        result = list(icloudpd.meta_iter._get_fallback_filename(pair))
-        self.assertEqual(len(result),1)
 
     @given(s=st.text(min_size=1, max_size=5))
     def test_get_id_valid_iter(self, s):
@@ -146,7 +138,7 @@ class MetaTest_Iter(TestCase):
             photo = json.load(f)
         pair = (photo["master_record"], photo["asset_record"])
         result = list(icloudpd.meta_iter.load(pair))
-        print(result)
+        # print(result)
         self.assertEqual(result,[
             (
                 'AdEGM+k3qUpNtCqmkkiooAFpZyxJ', 

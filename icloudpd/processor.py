@@ -10,7 +10,7 @@ from rx import operators as ops
 
 import icloudpd.network
 import icloudpd.storage
-import icloudpd.meta
+import icloudpd.meta_rx
 import icloudpd.domain
 import icloudpd.authentication
 
@@ -29,7 +29,7 @@ def start(username:str, album: str, directory: str, folder_structure: str):
                         rx.core.Observer(lambda photo: c.update())
                     ),
                 icloudpd.network.fetch_meta(album),
-                icloudpd.meta.load(),
+                icloudpd.meta_rx.load(),
                 ops.do(
                         rx.core.Observer(lambda photo: t.update())
                     ),

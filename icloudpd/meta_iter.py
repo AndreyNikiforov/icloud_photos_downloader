@@ -1,5 +1,5 @@
 """
-    Loads metadata
+    Loads metadata using iterators
 """
 from typing import Any, Mapping, Tuple, Iterable, Callable
 import collections.abc

@@ -10,7 +10,7 @@ import icloudpd.util
 
 class MetaGetTest_Iter(TestCase):
 
-    @given(s=st.text() | st.integers() | st.booleans() | st.floats())
+    @given(s=st.text() | st.integers() | st.booleans() | st.floats(allow_nan=False) | st.decimals(allow_nan=False))
     def test_get_valid_leaf(self, s):
         source = defaultdict(dict)
         source["level1"]["level2"] = s

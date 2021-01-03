@@ -3,7 +3,7 @@ from hypothesis import given, settings, HealthCheck
 import hypothesis.strategies as st
 import json
 from collections import defaultdict
-import os, math
+import os, math, datetime
 
 import icloudpd.meta
 import icloudpd.util
@@ -48,7 +48,7 @@ class MetaTest(TestCase):
         self.assertEqual(result,
             (
                 'AV6CozgukSZTJL0LL7vbdONrUxPC', 
-                1608662569220, 
+                datetime.datetime(2020, 12, 22, 18, 42, 49, 220000, tzinfo=datetime.timezone.utc), 
                 'IMG_1930.HEIC', 
                 (
                     'public.jpeg', 
@@ -196,7 +196,7 @@ class MetaTest(TestCase):
         self.assertEqual(result,
             (
                 'AdEGM+k3qUpNtCqmkkiooAFpZyxJ', 
-                1604492664396, 
+                datetime.datetime(2020, 11, 4, 12, 24, 24, 396000, tzinfo=datetime.timezone.utc), 
                 'IMG_0512.HEIC', 
                 (
                     'public.heic', 
@@ -210,3 +210,21 @@ class MetaTest(TestCase):
                 )
             ),
         )
+
+    def test_datetime_min_year_month_day(self):
+        dt = datetime.datetime.fromisoformat('0001-01-01 06:54:27+00:00')
+        ts = dt.timestamp()
+        result = icloudpd.meta.datetime_cleansed(ts * 1000)
+        self.assertEqual(result, datetime.datetime.fromisoformat('1970-01-01 06:54:27+00:00'))
+
+    def test_datetime_missing_epoch_20(self):
+        dt = datetime.datetime.fromisoformat('0085-02-03 06:54:27+00:00')
+        ts = dt.timestamp()
+        result = icloudpd.meta.datetime_cleansed(ts * 1000)
+        self.assertEqual(result, datetime.datetime.fromisoformat('1985-02-03 06:54:27+00:00'))
+
+    def test_datetime_missing_epoch_21(self):
+        dt = datetime.datetime.fromisoformat('0012-02-03 06:54:27+00:00')
+        ts = dt.timestamp()
+        result = icloudpd.meta.datetime_cleansed(ts * 1000)
+        self.assertEqual(result, datetime.datetime.fromisoformat('2012-02-03 06:54:27+00:00'))

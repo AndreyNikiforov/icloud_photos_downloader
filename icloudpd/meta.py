@@ -2,7 +2,7 @@
     Loads metadata
 """
 from typing import Any, Mapping, Tuple, Iterable, Callable, Optional
-import collections.abc
+import collections.abc, datetime
 
 import icloudpd.util
 
@@ -105,6 +105,22 @@ def timestamp_default_zero(source) -> int:
     value = _get_asset_timestamp(source)
     return 0 if value is None else value
 
+def datetime_cleansed(source: int) -> datetime.datetime:
+    """
+        Takes asset date as timestamp in ms and fallsback to 0
+    """
+    dt = datetime.datetime.fromtimestamp(source / 1000, tz=datetime.timezone.utc)
+    if dt.year == 1 and dt.month == 1 and dt.day == 1:
+        # timestamp is built from time only
+        return dt.replace(year=1970)
+    elif dt.year < 100:
+        # missing epoch
+        if dt.year >= 70:
+            return dt.replace(year=1900+dt.year)
+        else:
+            return dt.replace(year=2000+dt.year)
+    return dt
+
 def url_adjustment_default_to_original(source) -> Tuple[str, int, str]:
     """
         Strategy that takes adjustment meta (type, size, url) and falls back to original
@@ -116,11 +132,11 @@ def url_adjustment_default_to_original(source) -> Tuple[str, int, str]:
 def load( # pylint: disable=R0913
     source: Tuple[Mapping[str, Any], Mapping[str, Any]],
     id_strategy: Callable[[Tuple[Mapping[str, Any], Mapping[str, Any]]], str] = _get_id,
-    timestamp_strategy:
+    datetime_strategy:
         Callable[
             [Tuple[Mapping[str, Any], Mapping[str, Any]]],
             int
-        ] = timestamp_default_zero,
+        ] = lambda s: datetime_cleansed(timestamp_default_zero(s)),
     filename_strategy:
         Callable[
             [Tuple[Mapping[str, Any], Mapping[str, Any]]],
@@ -136,14 +152,14 @@ def load( # pylint: disable=R0913
             [Tuple[Mapping[str, Any], Mapping[str, Any]]],
             Tuple[str, int, str]
         ] = _get_url_complimentary,
-    ) -> Tuple:
+    ) -> Tuple[str, datetime.datetime, str, Tuple[str, int, str], Optional[Tuple[str, int, str]]]:
     """
         Loads asset attributes from tuple of records into Asset object
     """
 
     return (
         id_strategy(source),
-        timestamp_strategy(source),
+        datetime_strategy(source),
         filename_strategy(source),
         main_url_strategy(source),
         complimentary_url_strategy(source),

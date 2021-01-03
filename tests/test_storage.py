@@ -38,6 +38,7 @@ class SaveTest(TestCase):
         self.assertEqual(os.stat(path_like).st_size, size, "File size")
 
     @given(size=st.integers(min_value=0, max_value=100))
+    @settings(deadline=500) # sensitive to disk io speed
     def test_save_with_rename(self, size):
         base_dir = os.path.normpath(f"tests/fixtures/Photos/{inspect.stack()[0][3]}")
         if not os.path.exists(base_dir):

@@ -27,7 +27,7 @@ from icloudpd import exif_datetime
 # Must import the constants object so that we can mock values in tests.
 from icloudpd import constants
 from icloudpd.counter import Counter
-from icloudpd import processor
+# from icloudpd import processor
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
@@ -195,10 +195,9 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
     default=1,
 )
 @click.option(
-    "--feature",
-    help="Feature flags",
-    type=click.Choice(['processor2021']),
-    multiple=True,
+    "--experimental",
+    help="Enable experimental code",
+    is_flag=True,
 )
 @click.version_option()
 # pylint: disable-msg=too-many-arguments,too-many-statements
@@ -231,19 +230,15 @@ def main(
         no_progress_bar,
         notification_script,
         threads_num,    # pylint: disable=W0613
-        feature,
+        experimental,
 ):
     """Download all iCloud photos to a local directory"""
 
-    if "processor2021" in feature \
+    if experimental \
         and not list_albums \
         and directory:
-        result = processor.Processor().synchronize(
-            album,
-            directory,
-            # folder_structure
-        )
-        print(f"Result from Synchronize={result}")
+        import icloudpd.processor
+        icloudpd.processor.start(username, album, directory, folder_structure)
         sys.exit(0)
 
     logger = setup_logger()
@@ -424,6 +419,12 @@ def main(
 
         try:
             versions = photo.versions
+            with open(f'icloudpd-photo-dump-{photo.filename}.json', 'w') as outfile:
+                # pylint: disable=protected-access
+                json.dump({
+                    "master_record": photo._master_record,
+                    "asset_record": photo._asset_record
+                }, outfile)
         except KeyError as ex:
             print(
                 "KeyError: %s attribute was not found in the photo fields!" %

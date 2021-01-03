@@ -40,12 +40,26 @@ class NetworkTest(TestCase):
             context = pyicloud.PyiCloudService(
                 "jdoe@gmail.com", "password1",
                 client_id="DE309E26-942E-11E8-92F5-14109FE0B321")
-            results = icloudpd.network.fetch_meta(
-                context,
-                "All Photos"
-            ).pipe(
+            results = rx.just(context).pipe(
+                icloudpd.network.fetch_meta("All Photos"),
                 ops.take(100),
                 ops.to_iterable()
             ).run()
             self.assertEqual(cass.play_count, 4, "Cassette Content Played") # there are two more requests in cassette, don;t know what they are
         self.assertEqual(len(results), 100, "Result")
+
+    def test_meta_len(self):
+        import pyicloud
+        import vcr
+        with vcr.use_cassette("tests/vcr_cassettes/listing_photos.yml") as cass:
+            self.assertEqual(len(cass), 6, "Cassette Content")
+            context = pyicloud.PyiCloudService(
+                "jdoe@gmail.com", "password1",
+                client_id="DE309E26-942E-11E8-92F5-14109FE0B321")
+            results = rx.just(context).pipe(
+                icloudpd.network.meta_len("All Photos"),
+                ops.to_iterable()
+            ).run()
+            self.assertEqual(cass.play_count, 4, "Cassette Content Played") # there are two more requests in cassette, don;t know what they are
+        self.assertEqual(len(results), 1, "Result")
+        self.assertEqual(results[0], 33161, "Len")

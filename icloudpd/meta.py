@@ -152,21 +152,25 @@ def _get_asset_date(
     )
 
 def load(
-    source: rx.typing.Observable[Tuple[Mapping[str, Any], Mapping[str, Any]]],
-    scheduler: Optional[rx.typing.Scheduler] = None) -> rx.typing.Observable:
+    scheduler: Optional[rx.typing.Scheduler] = None) -> \
+    rx.typing.Callable[[rx.typing.Observable], rx.typing.Observable]:
     """
         Loads asset attributes from tuple of records into Asset object
     """
-    return source.pipe(
-        ops.flat_map(lambda x: rx.empty().pipe(
-                ops.concat(
-                    _get_id(x, scheduler),
-                    _get_asset_date(x, scheduler),
-                    _get_filename(x, scheduler),
-                    _get_url(x, scheduler),
-                    _get_compl_url(x, scheduler),
+    def _load(
+            source: rx.typing.Observable[Tuple[Mapping[str, Any], Mapping[str, Any]]],
+        ):
+        return source.pipe(
+            ops.flat_map(lambda x: rx.empty().pipe(
+                    ops.concat(
+                        _get_id(x, scheduler),
+                        _get_asset_date(x, scheduler),
+                        _get_filename(x, scheduler),
+                        _get_url(x, scheduler),
+                        _get_compl_url(x, scheduler),
+                    ),
+                    ops.buffer_with_count(5),
                 ),
-                ops.buffer_with_count(5),
             ),
-        ),
-    )
+        )
+    return _load

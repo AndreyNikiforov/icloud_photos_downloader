@@ -237,7 +237,7 @@ def main(
     if experimental \
         and not list_albums \
         and directory:
-        import icloudpd.processor
+        import icloudpd.processor # pylint: disable=C0415
         icloudpd.processor.start(username, album, directory, folder_structure)
         sys.exit(0)
 

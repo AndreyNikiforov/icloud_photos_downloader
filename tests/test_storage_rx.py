@@ -8,9 +8,9 @@ from rx import operators as ops
 import os
 import inspect
 
-import icloudpd.storage
+import icloudpd.storage_rx
 
-class SaveTest(TestCase):
+class SaveTest_Rx(TestCase):
 
     @given(chunks=st.lists(st.binary(max_size=20), max_size=5)) 
     @settings(deadline=500) # sensitive to disk io speed
@@ -29,7 +29,7 @@ class SaveTest(TestCase):
             path_like = os.path.join(base_dir, f"{size}_{random.randint(0, 1000000)}")
         # print(f"path_like: {path_like}")
 
-        result = icloudpd.storage.save_file(
+        result = icloudpd.storage_rx.save_file(
             path_like,
             lambda schedule: rx.from_iterable(chunks, schedule)
         ).pipe(ops.to_iterable()).run()
@@ -69,7 +69,7 @@ class SaveTest(TestCase):
                 )
             return _internal
 
-        result = icloudpd.storage.save_file_with_rename(
+        result = icloudpd.storage_rx.save_file_with_rename(
             path_like,
             _saver(path_like, _save_file(size)),
         ).pipe(ops.to_iterable()).run()

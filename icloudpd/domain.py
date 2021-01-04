@@ -5,7 +5,7 @@ from typing import Optional, Any, Mapping, Tuple, Callable
 # import rx
 # from rx import operators as ops
 
-def folder_mapper(folder_structure: str) -> Callable[[Tuple], str]:
+def folder_mapper_ts(folder_structure: str) -> Callable[[Tuple], str]:
     """
         Calculates destination folder based on photo meta data
     """
@@ -18,6 +18,18 @@ def folder_mapper(folder_structure: str) -> Callable[[Tuple], str]:
         )
     return _mapper
 
+def folder_mapper(folder_structure: str) -> Callable[[Tuple], str]:
+    """
+        Calculates destination folder based on photo meta data
+    """
+
+    import datetime # pylint: disable=C0415
+
+    def _mapper(photo: Tuple[Any]) -> str:
+        return folder_structure.format(
+            photo[1]
+        )
+    return _mapper
 
 # def calc_folder(folder_structure: str) -> \
 #     rx.typing.Callable[[rx.typing.Observable], rx.typing.Observable]:

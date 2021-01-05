@@ -419,12 +419,6 @@ def main(
 
         try:
             versions = photo.versions
-            with open(f'icloudpd-photo-dump-{photo.filename}.json', 'w') as outfile:
-                # pylint: disable=protected-access
-                json.dump({
-                    "master_record": photo._master_record,
-                    "asset_record": photo._asset_record
-                }, outfile)
         except KeyError as ex:
             print(
                 "KeyError: %s attribute was not found in the photo fields!" %

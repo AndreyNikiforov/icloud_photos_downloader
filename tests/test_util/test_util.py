@@ -2,7 +2,7 @@ from unittest import TestCase
 from hypothesis import given
 import hypothesis.strategies as st
 
-import icloudpd.util
+import icloudpd.util as ut
 
 class UtilTest(TestCase):
 
@@ -10,7 +10,7 @@ class UtilTest(TestCase):
     def test_buffer_with_count_odd(self, s):
         size = 1 + s * 2
         source= [size]*size
-        result = list(icloudpd.util.buffer_with_count(2, source))
+        result = list(ut.buffer_with_count(2, source))
         self.assertEqual(len(result), s + 1, "pairs")
 
 
@@ -18,5 +18,6 @@ class UtilTest(TestCase):
     def test_buffer_with_count_even(self, s):
         size = s * 2
         source= [size]*size
-        result = list(icloudpd.util.buffer_with_count(2, source))
+        result = list(ut.buffer_with_count(2, source))
         self.assertEqual(len(result), s, "pairs")
+

@@ -2,11 +2,7 @@
     Different Utils
 """
 
-import os
-import tempfile
-import errno
-import sys
-
+from typing import Callable, Any, Optional
 import itertools
 
 def buffer_with_count(count, iterable):

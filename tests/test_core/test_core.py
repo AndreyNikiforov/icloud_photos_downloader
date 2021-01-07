@@ -2,7 +2,6 @@ from unittest import TestCase
 from hypothesis import given, settings
 import hypothesis.strategies as st
 from collections import defaultdict
-
 import icloudpd.core as core
 
 class CoreTest(TestCase):

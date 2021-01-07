@@ -31,7 +31,7 @@ class ToPhotoSourceTest(TestCase):
                     1497485, 
                     'resOriginalRes-MockUrl'
                 ),
-                None,
+                (None, None, None),
             ),
         )
 
@@ -46,7 +46,7 @@ class ToPhotoSourceTest(TestCase):
                 'AdEGM+k3qUpNtCqmkkiooAFpZyxJ', 
                 1604492664396, 
                 'IMG_0512.HEIC', 
-                None,
+                (None, None, None),
                 (
                     'public.heic',
                     1274777,

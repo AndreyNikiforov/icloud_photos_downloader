@@ -15,10 +15,9 @@ class ToPhotoTest(TestCase):
             max_value=datetime.datetime(9999, 12, 31).timestamp()
         ),
         st.text(),
-        # st.tuples(
-        #     st.none(), st.none(), st.none()
-        # ),
-        st.none(),
+        st.tuples(
+            st.none(), st.none(), st.none()
+        ),
         st.tuples(
             st.text(), st.integers(), st.text()
         ),

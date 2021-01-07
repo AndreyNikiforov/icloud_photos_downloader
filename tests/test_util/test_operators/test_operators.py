@@ -40,3 +40,31 @@ class OperatorTest(TestCase):
     @given(d=st.integers() | st.decimals(allow_nan=False) | st.booleans() | st.floats(allow_nan=False))
     def test_default_if_none_default(self, d):
         self.assertEqual(ut.default_if_none(d)(None), d)
+
+    @given(t=st.tuples(
+        st.integers() | st.decimals(allow_nan=False) | st.booleans() | st.floats(allow_nan=False),
+        st.integers() | st.decimals(allow_nan=False) | st.booleans() | st.floats(allow_nan=False),
+        )
+    )
+    def test_all_or_none_valid(self, t):
+        self.assertEqual(ut.all_or_none()(t), t)
+
+    @given(t=st.tuples(
+        st.integers() | st.decimals(allow_nan=False) | st.booleans() | st.floats(allow_nan=False),
+        st.none(),
+        )
+    )
+    def test_all_or_none_with_none(self, t):
+        self.assertIsNone(ut.all_or_none()(t))
+
+    @given(t=st.tuples(
+        st.none(),
+        )
+    )
+    def test_all_or_none_single_tuple_none(self, t):
+        self.assertIsNone(ut.all_or_none()(t))
+
+    @given(t=st.none())
+    def test_all_or_none_single_none(self, t):
+        with self.assertRaises(TypeError):
+            ut.all_or_none()(t)

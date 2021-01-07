@@ -73,7 +73,7 @@ class GetterTest(TestCase):
         if l is not None:
             pair[1]["fields"]["resJPEGFullRes"]["value"]["downloadURL"] = l
         result = getters._get_url_adjustment(pair)
-        self.assertIsNone(result)
+        self.assertEqual(result, (t,s,l))
 
     @given(t=st.text(), s=st.integers(), l=st.text())
     def test_get_url_original(self, t, s, l):
@@ -104,7 +104,7 @@ class GetterTest(TestCase):
         if l is not None:
             pair[0]["fields"]["resOriginalRes"]["value"]["downloadURL"] = l
         result = getters._get_url_original(pair)
-        self.assertIsNone(result)
+        self.assertEqual(result, (t,s,l))
 
     @given(t=st.text(), s=st.integers(), l=st.text())
     def test_get_url_complimentary(self, t, s, l):
@@ -135,7 +135,7 @@ class GetterTest(TestCase):
         if l is not None:
             pair[0]["fields"]["resOriginalVidComplRes"]["value"]["downloadURL"] = l
         result = getters._get_url_complimentary(pair)
-        self.assertIsNone(result)
+        self.assertEqual(result, (t,s,l))
 
     def test_all(self):
         triplet = (1,2,3)

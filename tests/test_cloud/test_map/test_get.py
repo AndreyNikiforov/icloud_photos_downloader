@@ -2,7 +2,9 @@ from unittest import TestCase
 from hypothesis import given, settings, HealthCheck
 import hypothesis.strategies as st
 from collections import defaultdict
-import os, math, datetime
+import os
+import math
+import datetime
 
 import icloudpd.cloud.map as getters
 import icloudpd.util

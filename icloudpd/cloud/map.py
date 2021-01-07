@@ -35,14 +35,11 @@ def _get_url_adjustment(
         Gets url meta data (type, size, link) for adjusted image
     """
     (_, asset_record) = source
-    triplet = (
+    return (
                 _get(asset_record, ["fields", "resJPEGFullFileType", "value"]),
                 _get(asset_record, ["fields", "resJPEGFullRes", "value", "size"]),
                 _get(asset_record, ["fields", "resJPEGFullRes", "value", "downloadURL"]),
             )
-    if all(map(lambda x: x is not None, triplet)):
-        return triplet
-    return None
 
 def _get_url_original(
     source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> Optional[Tuple[str, int, str]]:
@@ -50,14 +47,11 @@ def _get_url_original(
         Gets url meta data (type, size, link) for original image/video
     """
     (master_record, _) = source
-    triplet = (
+    return (
                 _get(master_record, ["fields", "resOriginalFileType", "value"]),
                 _get(master_record, ["fields", "resOriginalRes", "value", "size"]),
                 _get(master_record, ["fields", "resOriginalRes", "value", "downloadURL"]),
             )
-    if all(map(lambda x: x is not None, triplet)):
-        return triplet
-    return None
 
 def _get_url_complimentary(
     source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> Optional[Tuple[str, int, str]]:
@@ -65,14 +59,11 @@ def _get_url_complimentary(
         Gets url meta data (type, size, link) for complimentary video
     """
     (master_record, _) = source
-    triplet = (
+    return (
                 _get(master_record, ["fields", "resOriginalVidComplFileType", "value"]),
                 _get(master_record, ["fields", "resOriginalVidComplRes", "value", "size"]),
                 _get(master_record, ["fields", "resOriginalVidComplRes", "value", "downloadURL"]),
             )
-    if all(map(lambda x: x is not None, triplet)):
-        return triplet
-    return None
 
 def _get_filename(source: Tuple[Mapping[str, Any], Mapping[str, Any]]) -> Optional[str]:
     (master_record, _) = source

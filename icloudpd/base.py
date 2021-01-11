@@ -236,9 +236,9 @@ def main(
 
     if experimental \
         and not list_albums \
-        and directory:
-        import icloudpd.processor # pylint: disable=C0415
-        icloudpd.processor.start(username, album, directory, folder_structure)
+        and directory:  # pragma: no cover
+        import icloudpd.app # pylint: disable=C0415
+        icloudpd.app.start(username, album, recent, directory, folder_structure, cookie_directory)
         sys.exit(0)
 
     logger = setup_logger()

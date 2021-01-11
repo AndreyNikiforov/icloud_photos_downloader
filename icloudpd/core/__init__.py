@@ -5,7 +5,7 @@ from typing import Callable
 import datetime
 import icloudpd.core.typing as ty
 
-def folder_mapper(folder_structure: str) -> Callable[[ty.Photo], str]:
+def folder_map_builder(folder_structure: str) -> Callable[[ty.Photo], str]:
     """
         Calculates destination folder based on photo meta data
     """

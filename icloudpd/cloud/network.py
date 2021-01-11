@@ -4,8 +4,9 @@
 from typing import Optional, Any, Mapping, Tuple, Iterable
 
 def fetch_meta(
+    album: str,
     context: Any,
-    album: str) -> \
+    ) -> \
         Iterable[Tuple[Mapping[str,Any], Mapping[str, Any]]]:
     """
         Fetch photo metadata
@@ -28,8 +29,9 @@ def fetch_file_stream(
     ).iter_content(chunk_size=chunk_size)
 
 def fetch_meta_len(
+    album: str,
     context:Any,
-    album: str) -> int:
+    ) -> int:
     """
         Fetch photo metadata
     """

@@ -8,17 +8,28 @@ import datetime
 PhotoId = str
 AssetDate = datetime.datetime
 FileName = str
-Reference = Tuple[str, int, str]
-Photo = Tuple[PhotoId, AssetDate, FileName, Reference, Optional[Reference]]
+ReferenceSource = Tuple[Optional[str], Optional[int], Optional[str]]
 
 AssetTimestamp = int
-ReferenceSource = Tuple[Optional[str], Optional[int], Optional[str]]
 
 PhotoSource = Tuple[
     PhotoId,
     AssetTimestamp,
     FileName,
-    Optional[ReferenceSource],
-    Optional[ReferenceSource],
-    Optional[ReferenceSource]
+    ReferenceSource,
+    ReferenceSource,
+    ReferenceSource
+]
+
+Reference = Tuple[str, int, str]
+Photo = Tuple[PhotoId, AssetDate, FileName, Reference, ReferenceSource]
+
+PathReference = Tuple[str, int, str, Optional[str]]
+
+PhotoPath = Tuple[
+    PhotoId,
+    AssetTimestamp,
+    FileName,
+    PathReference,
+    PathReference,
 ]

@@ -11,7 +11,6 @@ class OperatorTest(TestCase):
         result = ut.compose()(s)
         self.assertEqual(result, s)
 
-
     @given(s=st.integers() | st.decimals(allow_nan=False) | st.booleans() | st.floats(allow_nan=False) | st.none())
     def test_compose_lambdas(self, s):
         
@@ -29,6 +28,15 @@ class OperatorTest(TestCase):
             lambda x: ('a', x),
         )(s)
         self.assertEqual(results, ('a', s))
+
+    def test_compose_ref(self):
+        s = ['d']
+        results = ut.compose(
+            lambda x: ('a', x),
+            lambda x: ('b', x),
+        )(s)
+        self.assertEqual(results, ('b', ('a', ['d'])))
+        self.assertEqual(s, ['d'])
 
     @given(
         s=st.integers() | st.decimals(allow_nan=False) | st.booleans() | st.floats(allow_nan=False),

@@ -155,3 +155,10 @@ def is_path_exists_or_creatable_portable(pathname: str) -> bool:
     # other exceptions are unrelated fatal issues and should not be caught here.
     except OSError:
         return False
+
+def set_ext(path: str, ext: str) -> str:
+    """
+        adds/replaces extension of the path
+    """
+    import pathlib # pylint: disable=C0415
+    return str(pathlib.PurePath(path).with_suffix(ext))

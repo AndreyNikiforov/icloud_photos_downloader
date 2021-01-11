@@ -13,6 +13,7 @@ import icloudpd.cloud.network as network
 class NetworkTest(TestCase):
 
     @given(size=st.integers(min_value=1, max_value=5))
+    @settings(deadline=None) # sensitive to network speed
     def test_fetch_file_stream(self, size):
         # TODO start local server instead
 
@@ -43,7 +44,10 @@ class NetworkTest(TestCase):
                 client_id="DE309E26-942E-11E8-92F5-14109FE0B321")
             results = list(
                 it.islice(
-                    network.fetch_meta(context, "All Photos"),
+                    network.fetch_meta(
+                        "All Photos",
+                        context,
+                    ),
                     100,
                 )
             )
@@ -58,6 +62,9 @@ class NetworkTest(TestCase):
             context = pyicloud.PyiCloudService(
                 "jdoe@gmail.com", "password1",
                 client_id="DE309E26-942E-11E8-92F5-14109FE0B321")
-            result = network.fetch_meta_len(context, "All Photos")
+            result = network.fetch_meta_len(
+                "All Photos",
+                context,
+            )
             self.assertEqual(cass.play_count, 4, "Cassette Content Played") # there are two more requests in cassette, don;t know what they are
         self.assertEqual(result, 33161, "Len")

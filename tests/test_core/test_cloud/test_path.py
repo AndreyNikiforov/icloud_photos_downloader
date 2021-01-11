@@ -19,3 +19,4 @@ class PathTest(TestCase):
         self.assertFalse(icloudpd.util.path.is_pathname_valid(s))
         result = core.make_valid_filename(s)
         self.assertTrue(icloudpd.util.path.is_pathname_valid(result))
+        

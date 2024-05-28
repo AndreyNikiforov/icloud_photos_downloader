@@ -19,11 +19,11 @@ class UnexpectedEOSError(ParserError):
 
 class MissingExpectedEOSFError(ParserError):
     def __init__(self) -> None:
-        super().__init("Missing Expected End Of Stream")
+        super().__init__("Missing Expected End Of Stream")
 
 class NotMatchingError(ParserError):
     def __init__(self) -> None:
-        super().__init("No match")
+        super().__init__("No match")
 
 def satisfy(_pred: Callable[[_Tin], bool]) -> Parser[_Tin, _Tin, _Terr]:
     def _internal(_values:Sequence[_Tin]) -> Union[_Terr, Tuple[_Tin, Sequence[_Tin]]]:
@@ -74,6 +74,18 @@ def either(_p1: Parser[_Tin, _Tout1, _Terr], _p2: Parser[_Tin, _Tout2, _Terr]) -
             return _r1
     return _internal
 
+def map(_f: Callable[[_Tout1], _Tout2]) -> Callable[[Parser[_Tin, _Tout1, _Terr]], Parser[_Tin, _Tout2, _Terr]]:
+    def _internal(_p: Parser[_Tin, _Tout1, _Terr]) -> Parser[_Tin, _Tout2, _Terr]:
+        def _subinternal(_values:Sequence[_Tin]) -> Union[_Terr, Tuple[_Tout2, Sequence[_Tin]]]:
+            _r1 = _p(_values)
+            if isinstance(_r1, ParserError):
+                return typing.cast(_Terr, _r1)
+            else:
+                _r1_head, _r1_tail = _r1
+                return (_f(_r1_head), _r1_tail)
+        return _subinternal
+    return _internal
+
 def char(_char: str) -> Parser[str, str, _Terr]:
     return satisfy(lambda _c: _c == _char)
 
@@ -82,3 +94,15 @@ print(either(satisfy(isdigit),empty())("1"))
 print(either(satisfy(isdigit),empty())(""))
 print(combine(either(combine(char("1"),char("a")), char("1")), empty())("1a"))
 print(combine(either(combine(char("1"),char("a")), char("1")), empty())("1"))
+print(
+    combine(
+        either(
+            combine(
+                char("1"),
+                map(lambda _c: _c.upper())(char("a"))
+                ), 
+            char("1")
+            ), 
+        empty()
+        )
+    ("1a"))

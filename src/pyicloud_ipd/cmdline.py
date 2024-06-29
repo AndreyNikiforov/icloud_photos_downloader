@@ -33,7 +33,7 @@ def create_pickled_data(idevice: AppleDevice, filename: str) -> None:
         pickle.dump(idevice.content, pickle_file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def main(args:Optional[Sequence[str]]=None) -> NoReturn:
+def main(args: Optional[Sequence[str]] = None) -> NoReturn:
     """Main commandline entrypoint."""
     if args is None:
         args = sys.argv[1:]
@@ -181,7 +181,7 @@ def main(args:Optional[Sequence[str]]=None) -> NoReturn:
 
     username: Optional[str] = command_line.username.strip() or None
     password: Optional[str] = command_line.password.strip() or None
-    domain   = command_line.domain
+    domain = command_line.domain
 
     if username is not None and command_line.delete_from_keyring:
         utils.delete_password_in_keyring(username)
@@ -201,7 +201,10 @@ def main(args:Optional[Sequence[str]]=None) -> NoReturn:
             got_from_keyring = password is not None
 
         if password is None:
-            password = getpass.getpass(f'Enter iCloud password for {username}: ').strip() or None
+            password = (
+                getpass.getpass(f"Enter iCloud password for {username}: ").strip()
+                or None
+            )
 
         if password is None:
             parser.error("No password supplied")

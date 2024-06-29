@@ -1,0 +1,8 @@
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QGetting Node and npm\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q(pypi)=\nPyPI\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q(aur)=\nAUR\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Quse suffix from the still image with \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q policy: \"IMG_1234_HEVC.MOV\" for \"IMG_1234.HEIC\" still.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThis is default and works for HIEC still images only\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QUse suffix from the still image with \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q policy: \"IMG_1234_HEVC.MOV\" for \"IMG_1234.HEIC\" still.\\E$"}
+{"rule":"MISSING_GENITIVE","sentence":"^\\QUnicode characters are stripped from file names for better compatibility.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAdobe DNG - same as Apple ProRAW\nCanon CR2, CR3, and CRW\nSony ARW\nFuji RAF\nPanasonic RW2\nNikon NRF, NEF\nPentax PEF\nOlympus ORF\\E$"}

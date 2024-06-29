@@ -35,7 +35,7 @@ class PyiCloudPasswordFilter(logging.Filter):
         message = record.getMessage()
         if self.name in message:
             record.msg = message.replace(self.name, "********")
-            record.args = [] # type: ignore[assignment] 
+            record.args = []  # type: ignore[assignment]
 
         return True
 
@@ -48,14 +48,14 @@ class PyiCloudSession(Session):
         super().__init__()
 
     @override
-    # type: ignore 
-    # pylint: disable=arguments-differ 
-    def request(self, method: str, url, **kwargs):  
+    # type: ignore
+    # pylint: disable=arguments-differ
+    def request(self, method: str, url, **kwargs):
 
         # Charge logging to the right service endpoint
         callee = inspect.stack()[2]
         module = inspect.getmodule(callee[0])
-        request_logger = logging.getLogger(module.__name__).getChild("http") #type: ignore[union-attr]
+        request_logger = logging.getLogger(module.__name__).getChild("http")  # type: ignore[union-attr]
         if self.service.password_filter not in request_logger.filters:
             request_logger.addFilter(self.service.password_filter)
 
@@ -83,7 +83,7 @@ class PyiCloudSession(Session):
             LOGGER.debug("Saved session data to file")
 
         # Save cookies to file
-        self.cookies.save(ignore_discard=True, ignore_expires=True) # type: ignore[attr-defined]
+        self.cookies.save(ignore_discard=True, ignore_expires=True)  # type: ignore[attr-defined]
         LOGGER.debug("Cookies saved to %s", self.service.cookiejar_path)
 
         if not response.ok and (
@@ -140,7 +140,9 @@ class PyiCloudSession(Session):
 
         if isinstance(data, dict):
             if data.get("hasError"):
-                errors: Optional[Sequence[Dict[str, Any]]] = typing.cast(Optional[Sequence[Dict[str, Any]]], data.get("service_errors"))
+                errors: Optional[Sequence[Dict[str, Any]]] = typing.cast(
+                    Optional[Sequence[Dict[str, Any]]], data.get("service_errors")
+                )
                 # service_errors returns a list of dict
                 #    dict includes the keys: code, title, message, supressDismissal
                 # Assuming a single error for now
@@ -195,4 +197,3 @@ class PyiCloudSession(Session):
         api_error = PyiCloudAPIResponseException(reason, code)
         LOGGER.error(api_error)
         raise api_error
-

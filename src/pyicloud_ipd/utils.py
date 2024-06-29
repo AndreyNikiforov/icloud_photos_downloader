@@ -8,7 +8,7 @@ from pyicloud_ipd.version_size import AssetVersionSize, VersionSize
 
 from .exceptions import PyiCloudNoStoredPasswordAvailableException
 
-KEYRING_SYSTEM = 'pyicloud://icloud-password'
+KEYRING_SYSTEM = "pyicloud://icloud-password"
 
 
 # def get_password(username:str, interactive:bool=sys.stdout.isatty()) -> str:
@@ -25,18 +25,15 @@ KEYRING_SYSTEM = 'pyicloud://icloud-password'
 #         )
 
 
-def password_exists_in_keyring(username:str) -> bool:
+def password_exists_in_keyring(username: str) -> bool:
     try:
         return get_password_from_keyring(username) is not None
     except PyiCloudNoStoredPasswordAvailableException:
         return False
 
 
-def get_password_from_keyring(username:str) -> Optional[str]:
-    result = keyring.get_password(
-        KEYRING_SYSTEM,
-        username
-    )
+def get_password_from_keyring(username: str) -> Optional[str]:
+    result = keyring.get_password(KEYRING_SYSTEM, username)
     # if result is None:
     #     raise PyiCloudNoStoredPasswordAvailableException(
     #         "No pyicloud password for {username} could be found "
@@ -50,7 +47,7 @@ def get_password_from_keyring(username:str) -> Optional[str]:
     return result
 
 
-def store_password_in_keyring(username: str, password:str) -> None:
+def store_password_in_keyring(username: str, password: str) -> None:
     return keyring.set_password(
         KEYRING_SYSTEM,
         username,
@@ -58,39 +55,49 @@ def store_password_in_keyring(username: str, password:str) -> None:
     )
 
 
-def delete_password_in_keyring(username:str) -> None:
+def delete_password_in_keyring(username: str) -> None:
     return keyring.delete_password(
         KEYRING_SYSTEM,
         username,
     )
 
 
-def underscore_to_camelcase(word:str , initial_capital: bool=False) -> str:
-    words = [x.capitalize() or '_' for x in word.split('_')]
+def underscore_to_camelcase(word: str, initial_capital: bool = False) -> str:
+    words = [x.capitalize() or "_" for x in word.split("_")]
     if not initial_capital:
         words[0] = words[0].lower()
 
-    return ''.join(words)
+    return "".join(words)
 
-_Tin = TypeVar('_Tin')
-_Tout = TypeVar('_Tout')
-_Tinter = TypeVar('_Tinter')
-def compose(f:Callable[[_Tinter], _Tout], g: Callable[[_Tin], _Tinter]) -> Callable[[_Tin], _Tout]:
+
+_Tin = TypeVar("_Tin")
+_Tout = TypeVar("_Tout")
+_Tinter = TypeVar("_Tinter")
+
+
+def compose(
+    f: Callable[[_Tinter], _Tout], g: Callable[[_Tin], _Tinter]
+) -> Callable[[_Tin], _Tout]:
     """f after g composition of functions"""
+
     def inter_(value: _Tin) -> _Tout:
         return f(g(value))
+
     return inter_
+
 
 def identity(value: _Tin) -> _Tin:
     """identity function"""
     return value
 
+
 def constant(value: _Tout) -> Callable[[_Tin], _Tout]:
     """constant function"""
-    def _intern(_:_Tin) -> _Tout:
-        return value
-    return _intern
 
+    def _intern(_: _Tin) -> _Tout:
+        return value
+
+    return _intern
 
 
 # def filename_with_size(filename: str, size: str, original: Optional[Dict[str, Any]]) -> str:
@@ -103,7 +110,10 @@ def constant(value: _Tout) -> Callable[[_Tin], _Tout]:
 #         return filename
 #     return (f"-{size}.").join(filename.rsplit(".", 1))
 
-def disambiguate_filenames(_versions: Dict[VersionSize, AssetVersion], _sizes:Sequence[AssetVersionSize]) -> Dict[AssetVersionSize, AssetVersion]:
+
+def disambiguate_filenames(
+    _versions: Dict[VersionSize, AssetVersion], _sizes: Sequence[AssetVersionSize]
+) -> Dict[AssetVersionSize, AssetVersion]:
     _results: Dict[AssetVersionSize, AssetVersion] = {}
     # add those that were requested
     for _size in _sizes:
@@ -116,34 +126,60 @@ def disambiguate_filenames(_versions: Dict[VersionSize, AssetVersion], _sizes:Se
         if AssetVersionSize.ORIGINAL not in _sizes:
             if AssetVersionSize.ADJUSTED not in _results:
                 # clone
-                _results[AssetVersionSize.ADJUSTED] = copy.copy(_versions[AssetVersionSize.ORIGINAL])
+                _results[AssetVersionSize.ADJUSTED] = copy.copy(
+                    _versions[AssetVersionSize.ORIGINAL]
+                )
         else:
-            if AssetVersionSize.ADJUSTED in _results and _results[AssetVersionSize.ORIGINAL].filename == _results[AssetVersionSize.ADJUSTED].filename:
+            if (
+                AssetVersionSize.ADJUSTED in _results
+                and _results[AssetVersionSize.ORIGINAL].filename
+                == _results[AssetVersionSize.ADJUSTED].filename
+            ):
                 _n, _e = os.path.splitext(_results[AssetVersionSize.ADJUSTED].filename)
                 _results[AssetVersionSize.ADJUSTED].filename = _n + "-adjusted" + _e
 
     # alternative
     if AssetVersionSize.ALTERNATIVE in _sizes:
-        if AssetVersionSize.ORIGINAL not in _sizes and AssetVersionSize.ADJUSTED not in _results:
+        if (
+            AssetVersionSize.ORIGINAL not in _sizes
+            and AssetVersionSize.ADJUSTED not in _results
+        ):
             if AssetVersionSize.ALTERNATIVE not in _results:
                 # clone
-                _results[AssetVersionSize.ALTERNATIVE] = copy.copy(_versions[AssetVersionSize.ORIGINAL])
+                _results[AssetVersionSize.ALTERNATIVE] = copy.copy(
+                    _versions[AssetVersionSize.ORIGINAL]
+                )
         else:
             if AssetVersionSize.ALTERNATIVE in _results:
-                if AssetVersionSize.ADJUSTED in _results and _results[AssetVersionSize.ADJUSTED].filename == _results[AssetVersionSize.ALTERNATIVE].filename or AssetVersionSize.ORIGINAL in _results and _results[AssetVersionSize.ORIGINAL].filename == _results[AssetVersionSize.ALTERNATIVE].filename:
-                    _n, _e = os.path.splitext(_results[AssetVersionSize.ALTERNATIVE].filename)
-                    _results[AssetVersionSize.ALTERNATIVE].filename = _n + "-alternative" + _e
+                if (
+                    AssetVersionSize.ADJUSTED in _results
+                    and _results[AssetVersionSize.ADJUSTED].filename
+                    == _results[AssetVersionSize.ALTERNATIVE].filename
+                    or AssetVersionSize.ORIGINAL in _results
+                    and _results[AssetVersionSize.ORIGINAL].filename
+                    == _results[AssetVersionSize.ALTERNATIVE].filename
+                ):
+                    _n, _e = os.path.splitext(
+                        _results[AssetVersionSize.ALTERNATIVE].filename
+                    )
+                    _results[AssetVersionSize.ALTERNATIVE].filename = (
+                        _n + "-alternative" + _e
+                    )
 
     for _size in _sizes:
-        if _size not in [AssetVersionSize.ORIGINAL, AssetVersionSize.ADJUSTED, AssetVersionSize.ALTERNATIVE]:
+        if _size not in [
+            AssetVersionSize.ORIGINAL,
+            AssetVersionSize.ADJUSTED,
+            AssetVersionSize.ALTERNATIVE,
+        ]:
             if _size not in _results:
                 # ensure original is downloaded - mimic existing behavior
                 if AssetVersionSize.ORIGINAL not in _sizes:
-                    _results[AssetVersionSize.ORIGINAL] = copy.copy(_versions[AssetVersionSize.ORIGINAL])
+                    _results[AssetVersionSize.ORIGINAL] = copy.copy(
+                        _versions[AssetVersionSize.ORIGINAL]
+                    )
             # else:
             #     _n, _e = os.path.splitext(_results[_size]["filename"])
             #     _results[_size]["filename"] = f"{_n}-{_size}{_e}"
 
-
     return _results
-

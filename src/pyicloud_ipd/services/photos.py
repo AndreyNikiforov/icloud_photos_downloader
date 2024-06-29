@@ -22,7 +22,11 @@ from urllib.parse import urlencode
 from pyicloud_ipd.file_match import FileMatchPolicy
 from pyicloud_ipd.raw_policy import RawTreatmentPolicy
 from pyicloud_ipd.session import PyiCloudSession
-from pyicloud_ipd.version_size import AssetVersionSize, LivePhotoVersionSize, VersionSize
+from pyicloud_ipd.version_size import (
+    AssetVersionSize,
+    LivePhotoVersionSize,
+    VersionSize,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -32,121 +36,115 @@ class PhotoLibrary(object):
 
     This provides access to all the albums as well as the photos.
     """
+
     SMART_FOLDERS = {
         "All Photos": {
             "obj_type": "CPLAssetByAssetDateWithoutHiddenOrDeleted",
             "list_type": "CPLAssetAndMasterByAssetDateWithoutHiddenOrDeleted",
             "direction": "ASCENDING",
-            "query_filter": None
+            "query_filter": None,
         },
         "Time-lapse": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Timelapse",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "TIMELAPSE"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "TIMELAPSE"},
                 }
-            }]
+            ],
         },
         "Videos": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Video",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "VIDEO"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "VIDEO"},
                 }
-            }]
+            ],
         },
         "Slo-mo": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Slomo",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "SLOMO"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "SLOMO"},
                 }
-            }]
+            ],
         },
         "Bursts": {
             "obj_type": "CPLAssetBurstStackAssetByAssetDate",
             "list_type": "CPLBurstStackAssetAndMasterByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": None
+            "query_filter": None,
         },
         "Favorites": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Favorite",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "FAVORITE"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "FAVORITE"},
                 }
-            }]
+            ],
         },
         "Panoramas": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Panorama",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "PANORAMA"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "PANORAMA"},
                 }
-            }]
+            ],
         },
         "Screenshots": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Screenshot",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "SCREENSHOT"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "SCREENSHOT"},
                 }
-            }]
+            ],
         },
         "Live": {
             "obj_type": "CPLAssetInSmartAlbumByAssetDate:Live",
             "list_type": "CPLAssetAndMasterInSmartAlbumByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": [{
-                "fieldName": "smartAlbum",
-                "comparator": "EQUALS",
-                "fieldValue": {
-                    "type": "STRING",
-                    "value": "LIVE"
+            "query_filter": [
+                {
+                    "fieldName": "smartAlbum",
+                    "comparator": "EQUALS",
+                    "fieldValue": {"type": "STRING", "value": "LIVE"},
                 }
-            }]
+            ],
         },
         "Recently Deleted": {
             "obj_type": "CPLAssetDeletedByExpungedDate",
             "list_type": "CPLAssetAndMasterDeletedByExpungedDate",
             "direction": "ASCENDING",
-            "query_filter": None
+            "query_filter": None,
         },
         "Hidden": {
             "obj_type": "CPLAssetHiddenByAssetDate",
             "list_type": "CPLAssetAndMasterHiddenByAssetDate",
             "direction": "ASCENDING",
-            "query_filter": None
+            "query_filter": None,
         },
     }
 
@@ -156,83 +154,100 @@ class PhotoLibrary(object):
 
         self._albums: Optional[Dict[str, PhotoAlbum]] = None
 
-        url = ('%s/records/query?%s' %
-               (self.service._service_endpoint, urlencode(self.service.params)))
-        json_data = json.dumps({
-            "query": {"recordType":"CheckIndexingState"},
-            "zoneID": self.zone_id,
-        })
+        url = "%s/records/query?%s" % (
+            self.service._service_endpoint,
+            urlencode(self.service.params),
+        )
+        json_data = json.dumps(
+            {
+                "query": {"recordType": "CheckIndexingState"},
+                "zoneID": self.zone_id,
+            }
+        )
 
         request = self.service.session.post(
-            url,
-            data=json_data,
-            headers={'Content-type': 'text/plain'}
+            url, data=json_data, headers={"Content-type": "text/plain"}
         )
         response = request.json()
-        indexing_state = response['records'][0]['fields']['state']['value']
-        if indexing_state != 'FINISHED':
+        indexing_state = response["records"][0]["fields"]["state"]["value"]
+        if indexing_state != "FINISHED":
             raise PyiCloudServiceNotActivatedException(
-                ('iCloud Photo Library not finished indexing.  Please try '
-                 'again in a few minutes'), None)
+                (
+                    "iCloud Photo Library not finished indexing.  Please try "
+                    "again in a few minutes"
+                ),
+                None,
+            )
 
     @property
     def albums(self) -> Dict[str, "PhotoAlbum"]:
         if not self._albums:
             self._albums = {
-                name: PhotoAlbum(self.service, name, zone_id=self.zone_id, **props) # type: ignore[arg-type] # dynamically builing params 
+                name: PhotoAlbum(self.service, name, zone_id=self.zone_id, **props)  # type: ignore[arg-type] # dynamically builing params
                 for (name, props) in self.SMART_FOLDERS.items()
             }
 
             for folder in self._fetch_folders():
                 # FIXME: Handle subfolders
-                if folder['recordName'] in ('----Root-Folder----',
-                    '----Project-Root-Folder----') or \
-                    (folder['fields'].get('isDeleted') and
-                     folder['fields']['isDeleted']['value']):
+                if folder["recordName"] in (
+                    "----Root-Folder----",
+                    "----Project-Root-Folder----",
+                ) or (
+                    folder["fields"].get("isDeleted")
+                    and folder["fields"]["isDeleted"]["value"]
+                ):
                     continue
 
-                folder_id = folder['recordName']
-                folder_obj_type = \
+                folder_id = folder["recordName"]
+                folder_obj_type = (
                     "CPLContainerRelationNotDeletedByAssetDate:%s" % folder_id
+                )
                 folder_name = base64.b64decode(
-                    folder['fields']['albumNameEnc']['value']).decode('utf-8')
-                query_filter = [{
-                    "fieldName": "parentId",
-                    "comparator": "EQUALS",
-                    "fieldValue": {
-                        "type": "STRING",
-                        "value": folder_id
+                    folder["fields"]["albumNameEnc"]["value"]
+                ).decode("utf-8")
+                query_filter = [
+                    {
+                        "fieldName": "parentId",
+                        "comparator": "EQUALS",
+                        "fieldValue": {"type": "STRING", "value": folder_id},
                     }
-                }]
+                ]
 
-                album = PhotoAlbum(self.service, folder_name,
-                                   'CPLContainerRelationLiveByAssetDate',
-                                   folder_obj_type, 'ASCENDING', query_filter,
-                                   zone_id=self.zone_id)
+                album = PhotoAlbum(
+                    self.service,
+                    folder_name,
+                    "CPLContainerRelationLiveByAssetDate",
+                    folder_obj_type,
+                    "ASCENDING",
+                    query_filter,
+                    zone_id=self.zone_id,
+                )
                 self._albums[folder_name] = album
 
         return self._albums
 
     def _fetch_folders(self) -> Sequence[Dict[str, Any]]:
-        url = ('%s/records/query?%s' %
-               (self.service._service_endpoint, urlencode(self.service.params)))
-        json_data = json.dumps({
-            "query": {"recordType":"CPLAlbumByPositionLive"},
-            "zoneID": self.zone_id,
-        })
+        url = "%s/records/query?%s" % (
+            self.service._service_endpoint,
+            urlencode(self.service.params),
+        )
+        json_data = json.dumps(
+            {
+                "query": {"recordType": "CPLAlbumByPositionLive"},
+                "zoneID": self.zone_id,
+            }
+        )
 
         request = self.service.session.post(
-            url,
-            data=json_data,
-            headers={'Content-type': 'text/plain'}
+            url, data=json_data, headers={"Content-type": "text/plain"}
         )
         response = request.json()
 
-        return typing.cast(Sequence[Dict[str, Any]], response['records'])
+        return typing.cast(Sequence[Dict[str, Any]], response["records"])
 
     @property
     def all(self) -> "PhotoAlbum":
-        return self.albums['All Photos']
+        return self.albums["All Photos"]
 
 
 class PhotosService(PhotoLibrary):
@@ -240,21 +255,24 @@ class PhotosService(PhotoLibrary):
 
     This also acts as a way to access the user's primary library.
     """
+
     def __init__(
-            self, 
-            service_root: str, 
-            session: PyiCloudSession, 
-            params: Dict[str, Any], 
-            filename_cleaner:Callable[[str], str], 
-            lp_filename_generator: Callable[[str], str], 
-            raw_policy: RawTreatmentPolicy,
-            file_match_policy: FileMatchPolicy):
+        self,
+        service_root: str,
+        session: PyiCloudSession,
+        params: Dict[str, Any],
+        filename_cleaner: Callable[[str], str],
+        lp_filename_generator: Callable[[str], str],
+        raw_policy: RawTreatmentPolicy,
+        file_match_policy: FileMatchPolicy,
+    ):
         self.session = session
         self.params = dict(params)
         self._service_root = service_root
-        self._service_endpoint = \
-            ('%s/database/1/com.apple.photos.cloud/production/private'
-             % self._service_root)
+        self._service_endpoint = (
+            "%s/database/1/com.apple.photos.cloud/production/private"
+            % self._service_root
+        )
 
         self._libraries: Optional[Dict[str, PhotoLibrary]] = None
 
@@ -263,10 +281,7 @@ class PhotosService(PhotoLibrary):
         self.raw_policy = raw_policy
         self.file_match_policy = file_match_policy
 
-        self.params.update({
-            'remapEnums': True,
-            'getCurrentSyncToken': True
-        })
+        self.params.update({"remapEnums": True, "getCurrentSyncToken": True})
 
         # TODO: Does syncToken ever change?
         # self.params.update({
@@ -277,34 +292,31 @@ class PhotosService(PhotoLibrary):
         # self._photo_assets = {}
 
         super(PhotosService, self).__init__(
-            service=self, zone_id={u'zoneName': u'PrimarySync'})
+            service=self, zone_id={"zoneName": "PrimarySync"}
+        )
 
     @property
     def libraries(self) -> Dict[str, PhotoLibrary]:
         if not self._libraries:
             try:
-                url = ('%s/zones/list' %
-                    (self._service_endpoint, ))
+                url = "%s/zones/list" % (self._service_endpoint,)
                 request = self.session.post(
-                    url,
-                    data='{}',
-                    headers={'Content-type': 'text/plain'}
+                    url, data="{}", headers={"Content-type": "text/plain"}
                 )
                 response = request.json()
-                zones = response['zones'] 
+                zones = response["zones"]
             except Exception as e:
-                    logger.error("library exception: %s" % str(e))
+                logger.error("library exception: %s" % str(e))
 
             libraries = {}
             for zone in zones:
-                if not zone.get('deleted'):
-                    zone_name = zone['zoneID']['zoneName']
-                    libraries[zone_name] = PhotoLibrary(
-                        self, zone_id=zone['zoneID'])
-                        # obj_type='CPLAssetByAssetDateWithoutHiddenOrDeleted',
-                        # list_type="CPLAssetAndMasterByAssetDateWithoutHiddenOrDeleted",
-                        # direction="ASCENDING", query_filter=None,
-                        # zone_id=zone['zoneID'])
+                if not zone.get("deleted"):
+                    zone_name = zone["zoneID"]["zoneName"]
+                    libraries[zone_name] = PhotoLibrary(self, zone_id=zone["zoneID"])
+                    # obj_type='CPLAssetByAssetDateWithoutHiddenOrDeleted',
+                    # list_type="CPLAssetAndMasterByAssetDateWithoutHiddenOrDeleted",
+                    # direction="ASCENDING", query_filter=None,
+                    # zone_id=zone['zoneID'])
 
             self._libraries = libraries
 
@@ -313,8 +325,17 @@ class PhotosService(PhotoLibrary):
 
 class PhotoAlbum(object):
 
-    def __init__(self, service:PhotosService, name: str, list_type: str, obj_type: str, direction: str,
-                 query_filter:Optional[Sequence[Dict[str, Any]]]=None, page_size:int=100, zone_id:Optional[Dict[str, Any]]=None):
+    def __init__(
+        self,
+        service: PhotosService,
+        name: str,
+        list_type: str,
+        obj_type: str,
+        direction: str,
+        query_filter: Optional[Sequence[Dict[str, Any]]] = None,
+        page_size: int = 100,
+        zone_id: Optional[Dict[str, Any]] = None,
+    ):
         self.name = name
         self.service = service
         self.list_type = list_type
@@ -329,7 +350,7 @@ class PhotoAlbum(object):
         if zone_id:
             self._zone_id: Dict[str, Any] = zone_id
         else:
-            self._zone_id = {u'zoneName': u'PrimarySync'}
+            self._zone_id = {"zoneName": "PrimarySync"}
 
     @property
     def title(self) -> str:
@@ -340,34 +361,38 @@ class PhotoAlbum(object):
 
     def __len__(self) -> int:
         if self._len is None:
-            url = ('%s/internal/records/query/batch?%s' %
-                   (self.service._service_endpoint,
-                    urlencode(self.service.params)))
+            url = "%s/internal/records/query/batch?%s" % (
+                self.service._service_endpoint,
+                urlencode(self.service.params),
+            )
             request = self.service.session.post(
                 url,
                 data=json.dumps(self._count_query_gen(self.obj_type)),
-                headers={'Content-type': 'text/plain'}
+                headers={"Content-type": "text/plain"},
             )
             response = request.json()
 
-            self._len = (response["batch"][0]["records"][0]["fields"]
-                         ["itemCount"]["value"])
+            self._len = response["batch"][0]["records"][0]["fields"]["itemCount"][
+                "value"
+            ]
 
         return self._len
 
     # Perform the request in a separate method so that we
     # can mock it to test session errors.
     def photos_request(self, offset: int) -> Response:
-        url = ('%s/records/query?' % self.service._service_endpoint) + \
-            urlencode(self.service.params)
+        url = ("%s/records/query?" % self.service._service_endpoint) + urlencode(
+            self.service.params
+        )
         return self.service.session.post(
             url,
-            data=json.dumps(self._list_query_gen(
-                offset, self.list_type, self.direction,
-                self.query_filter)),
-            headers={'Content-type': 'text/plain'}
+            data=json.dumps(
+                self._list_query_gen(
+                    offset, self.list_type, self.direction, self.query_filter
+                )
+            ),
+            headers={"Content-type": "text/plain"},
         )
-
 
     @property
     def photos(self) -> Generator["PhotoAsset", Any, None]:
@@ -378,7 +403,7 @@ class PhotoAlbum(object):
 
         exception_retries = 0
 
-        while(True):
+        while True:
             try:
                 request = self.photos_request(offset)
             except PyiCloudAPIResponseException as ex:
@@ -393,26 +418,25 @@ class PhotoAlbum(object):
 
             exception_retries = 0
 
-#            url = ('%s/records/query?' % self.service._service_endpoint) + \
-#                urlencode(self.service.params)
-#            request = self.service.session.post(
-#                url,
-#                data=json.dumps(self._list_query_gen(
-#                    offset, self.list_type, self.direction,
-#                    self.query_filter)),
-#                headers={'Content-type': 'text/plain'}
-#            )
+            #            url = ('%s/records/query?' % self.service._service_endpoint) + \
+            #                urlencode(self.service.params)
+            #            request = self.service.session.post(
+            #                url,
+            #                data=json.dumps(self._list_query_gen(
+            #                    offset, self.list_type, self.direction,
+            #                    self.query_filter)),
+            #                headers={'Content-type': 'text/plain'}
+            #            )
 
             response = request.json()
 
             asset_records = {}
             master_records = []
-            for rec in response['records']:
-                if rec['recordType'] == "CPLAsset":
-                    master_id = \
-                        rec['fields']['masterRef']['value']['recordName']
+            for rec in response["records"]:
+                if rec["recordType"] == "CPLAsset":
+                    master_id = rec["fields"]["masterRef"]["value"]["recordName"]
                     asset_records[master_id] = rec
-                elif rec['recordType'] == "CPLMaster":
+                elif rec["recordType"] == "CPLMaster":
                     master_records.append(rec)
 
             master_records_len = len(master_records)
@@ -423,96 +447,162 @@ class PhotoAlbum(object):
                     offset = offset + master_records_len
 
                 for master_record in master_records:
-                    record_name = master_record['recordName']
-                    yield PhotoAsset(self.service, master_record,
-                                     asset_records[record_name])
+                    record_name = master_record["recordName"]
+                    yield PhotoAsset(
+                        self.service, master_record, asset_records[record_name]
+                    )
             else:
                 break
 
     def _count_query_gen(self, obj_type: str) -> Dict[str, Any]:
         query = {
-            u'batch': [{
-                u'resultsLimit': 1,
-                u'query': {
-                    u'filterBy': {
-                        u'fieldName': u'indexCountID',
-                        u'fieldValue': {
-                            u'type': u'STRING_LIST',
-                            u'value': [
-                                obj_type
-                            ]
+            "batch": [
+                {
+                    "resultsLimit": 1,
+                    "query": {
+                        "filterBy": {
+                            "fieldName": "indexCountID",
+                            "fieldValue": {"type": "STRING_LIST", "value": [obj_type]},
+                            "comparator": "IN",
                         },
-                        u'comparator': u'IN'
+                        "recordType": "HyperionIndexCountLookup",
                     },
-                    u'recordType': u'HyperionIndexCountLookup'
-                },
-                u'zoneWide': True,
-                u'zoneID': self._zone_id
-            }]
+                    "zoneWide": True,
+                    "zoneID": self._zone_id,
+                }
+            ]
         }
 
         return query
 
-    def _list_query_gen(self, offset: int, list_type: str, direction: str, query_filter:Optional[Sequence[Dict[str,None]]]=None) -> Dict[str, Any]:
+    def _list_query_gen(
+        self,
+        offset: int,
+        list_type: str,
+        direction: str,
+        query_filter: Optional[Sequence[Dict[str, None]]] = None,
+    ) -> Dict[str, Any]:
         query: Dict[str, Any] = {
-            u'query': {
-                u'filterBy': [
-                    {u'fieldName': u'startRank', u'fieldValue':
-                        {u'type': u'INT64', u'value': offset},
-                        u'comparator': u'EQUALS'},
-                    {u'fieldName': u'direction', u'fieldValue':
-                        {u'type': u'STRING', u'value': direction},
-                        u'comparator': u'EQUALS'}
+            "query": {
+                "filterBy": [
+                    {
+                        "fieldName": "startRank",
+                        "fieldValue": {"type": "INT64", "value": offset},
+                        "comparator": "EQUALS",
+                    },
+                    {
+                        "fieldName": "direction",
+                        "fieldValue": {"type": "STRING", "value": direction},
+                        "comparator": "EQUALS",
+                    },
                 ],
-                u'recordType': list_type
+                "recordType": list_type,
             },
-            u'resultsLimit': self.page_size * 2,
-            u'desiredKeys': [
-                u'resJPEGFullWidth', u'resJPEGFullHeight',
-                u'resJPEGFullFileType', u'resJPEGFullFingerprint',
-                u'resJPEGFullRes', u'resJPEGLargeWidth',
-                u'resJPEGLargeHeight', u'resJPEGLargeFileType',
-                u'resJPEGLargeFingerprint', u'resJPEGLargeRes',
-                u'resJPEGMedWidth', u'resJPEGMedHeight',
-                u'resJPEGMedFileType', u'resJPEGMedFingerprint',
-                u'resJPEGMedRes', u'resJPEGThumbWidth',
-                u'resJPEGThumbHeight', u'resJPEGThumbFileType',
-                u'resJPEGThumbFingerprint', u'resJPEGThumbRes',
-                u'resVidFullWidth', u'resVidFullHeight',
-                u'resVidFullFileType', u'resVidFullFingerprint',
-                u'resVidFullRes', u'resVidMedWidth', u'resVidMedHeight',
-                u'resVidMedFileType', u'resVidMedFingerprint',
-                u'resVidMedRes', u'resVidSmallWidth', u'resVidSmallHeight',
-                u'resVidSmallFileType', u'resVidSmallFingerprint',
-                u'resVidSmallRes', u'resSidecarWidth', u'resSidecarHeight',
-                u'resSidecarFileType', u'resSidecarFingerprint',
-                u'resSidecarRes', u'itemType', u'dataClassType',
-                u'filenameEnc', u'originalOrientation', u'resOriginalWidth',
-                u'resOriginalHeight', u'resOriginalFileType',
-                u'resOriginalFingerprint', u'resOriginalRes',
-                u'resOriginalAltWidth', u'resOriginalAltHeight',
-                u'resOriginalAltFileType', u'resOriginalAltFingerprint',
-                u'resOriginalAltRes', u'resOriginalVidComplWidth',
-                u'resOriginalVidComplHeight', u'resOriginalVidComplFileType',
-                u'resOriginalVidComplFingerprint', u'resOriginalVidComplRes',
-                u'isDeleted', u'isExpunged', u'dateExpunged', u'remappedRef',
-                u'recordName', u'recordType', u'recordChangeTag',
-                u'masterRef', u'adjustmentRenderType', u'assetDate',
-                u'addedDate', u'isFavorite', u'isHidden', u'orientation',
-                u'duration', u'assetSubtype', u'assetSubtypeV2',
-                u'assetHDRType', u'burstFlags', u'burstFlagsExt', u'burstId',
-                u'captionEnc', u'locationEnc', u'locationV2Enc',
-                u'locationLatitude', u'locationLongitude', u'adjustmentType',
-                u'timeZoneOffset', u'vidComplDurValue', u'vidComplDurScale',
-                u'vidComplDispValue', u'vidComplDispScale',
-                u'vidComplVisibilityState', u'customRenderedValue',
-                u'containerId', u'itemId', u'position', u'isKeyAsset'
+            "resultsLimit": self.page_size * 2,
+            "desiredKeys": [
+                "resJPEGFullWidth",
+                "resJPEGFullHeight",
+                "resJPEGFullFileType",
+                "resJPEGFullFingerprint",
+                "resJPEGFullRes",
+                "resJPEGLargeWidth",
+                "resJPEGLargeHeight",
+                "resJPEGLargeFileType",
+                "resJPEGLargeFingerprint",
+                "resJPEGLargeRes",
+                "resJPEGMedWidth",
+                "resJPEGMedHeight",
+                "resJPEGMedFileType",
+                "resJPEGMedFingerprint",
+                "resJPEGMedRes",
+                "resJPEGThumbWidth",
+                "resJPEGThumbHeight",
+                "resJPEGThumbFileType",
+                "resJPEGThumbFingerprint",
+                "resJPEGThumbRes",
+                "resVidFullWidth",
+                "resVidFullHeight",
+                "resVidFullFileType",
+                "resVidFullFingerprint",
+                "resVidFullRes",
+                "resVidMedWidth",
+                "resVidMedHeight",
+                "resVidMedFileType",
+                "resVidMedFingerprint",
+                "resVidMedRes",
+                "resVidSmallWidth",
+                "resVidSmallHeight",
+                "resVidSmallFileType",
+                "resVidSmallFingerprint",
+                "resVidSmallRes",
+                "resSidecarWidth",
+                "resSidecarHeight",
+                "resSidecarFileType",
+                "resSidecarFingerprint",
+                "resSidecarRes",
+                "itemType",
+                "dataClassType",
+                "filenameEnc",
+                "originalOrientation",
+                "resOriginalWidth",
+                "resOriginalHeight",
+                "resOriginalFileType",
+                "resOriginalFingerprint",
+                "resOriginalRes",
+                "resOriginalAltWidth",
+                "resOriginalAltHeight",
+                "resOriginalAltFileType",
+                "resOriginalAltFingerprint",
+                "resOriginalAltRes",
+                "resOriginalVidComplWidth",
+                "resOriginalVidComplHeight",
+                "resOriginalVidComplFileType",
+                "resOriginalVidComplFingerprint",
+                "resOriginalVidComplRes",
+                "isDeleted",
+                "isExpunged",
+                "dateExpunged",
+                "remappedRef",
+                "recordName",
+                "recordType",
+                "recordChangeTag",
+                "masterRef",
+                "adjustmentRenderType",
+                "assetDate",
+                "addedDate",
+                "isFavorite",
+                "isHidden",
+                "orientation",
+                "duration",
+                "assetSubtype",
+                "assetSubtypeV2",
+                "assetHDRType",
+                "burstFlags",
+                "burstFlagsExt",
+                "burstId",
+                "captionEnc",
+                "locationEnc",
+                "locationV2Enc",
+                "locationLatitude",
+                "locationLongitude",
+                "adjustmentType",
+                "timeZoneOffset",
+                "vidComplDurValue",
+                "vidComplDurScale",
+                "vidComplDispValue",
+                "vidComplDispScale",
+                "vidComplVisibilityState",
+                "customRenderedValue",
+                "containerId",
+                "itemId",
+                "position",
+                "isKeyAsset",
             ],
-            u'zoneID': self._zone_id
+            "zoneID": self._zone_id,
         }
 
         if query_filter:
-            query['query']['filterBy'].extend(query_filter)
+            query["query"]["filterBy"].extend(query_filter)
 
         return query
 
@@ -524,17 +614,19 @@ class PhotoAlbum(object):
         if sys.version_info[0] >= 3:
             return as_unicode
         else:
-            return as_unicode.encode('ascii', 'ignore')
+            return as_unicode.encode("ascii", "ignore")
 
     def __repr__(self) -> str:
-        return "<%s: '%s'>" % (
-            type(self).__name__,
-            self
-        )
+        return "<%s: '%s'>" % (type(self).__name__, self)
 
 
 class PhotoAsset(object):
-    def __init__(self, service:PhotosService, master_record: Dict[str, Any], asset_record: Dict[str, Any]) -> None:
+    def __init__(
+        self,
+        service: PhotosService,
+        master_record: Dict[str, Any],
+        asset_record: Dict[str, Any],
+    ) -> None:
         self._service = service
         self._master_record = master_record
         self._asset_record = asset_record
@@ -542,93 +634,95 @@ class PhotoAsset(object):
         self._versions: Optional[Dict[VersionSize, AssetVersion]] = None
 
     ITEM_TYPES = {
-        u"public.heic": u"image",
-        u"public.jpeg": u"image",
-        u"public.png": u"image",
-        u"com.apple.quicktime-movie": u"movie",
-        u"com.adobe.raw-image": u"image",
-        u"com.canon.cr2-raw-image": u"image",
-        u'com.canon.crw-raw-image': u"image",
-        u'com.sony.arw-raw-image': u"image",
-        u'com.fuji.raw-image': u"image",
-        u'com.panasonic.rw2-raw-image': u"image",
-        u'com.nikon.nrw-raw-image': u"image",
-        u'com.pentax.raw-image': u"image",
-        u'com.nikon.raw-image': u"image",
-        u'com.olympus.raw-image': u"image",
-        u'com.canon.cr3-raw-image': u"image",
-        u'com.olympus.or-raw-image': u"image",
+        "public.heic": "image",
+        "public.jpeg": "image",
+        "public.png": "image",
+        "com.apple.quicktime-movie": "movie",
+        "com.adobe.raw-image": "image",
+        "com.canon.cr2-raw-image": "image",
+        "com.canon.crw-raw-image": "image",
+        "com.sony.arw-raw-image": "image",
+        "com.fuji.raw-image": "image",
+        "com.panasonic.rw2-raw-image": "image",
+        "com.nikon.nrw-raw-image": "image",
+        "com.pentax.raw-image": "image",
+        "com.nikon.raw-image": "image",
+        "com.olympus.raw-image": "image",
+        "com.canon.cr3-raw-image": "image",
+        "com.olympus.or-raw-image": "image",
     }
 
     ITEM_TYPE_EXTENSIONS = {
-        u"public.heic": u"HEIC",
-        u"public.jpeg": u"JPG",
-        u"public.png": u"PNG",
-        u"com.apple.quicktime-movie": u"MOV",
-        u"com.adobe.raw-image": u"DNG",
-        u"com.canon.cr2-raw-image": u"CR2",
-        u'com.canon.crw-raw-image': u"CRW",
-        u'com.sony.arw-raw-image': u"ARW",
-        u'com.fuji.raw-image': u"RAF",
-        u'com.panasonic.rw2-raw-image': u"RW2",
-        u'com.nikon.nrw-raw-image': u"NRF",
-        u'com.pentax.raw-image': u"PEF",
-        u'com.nikon.raw-image': u"NEF",
-        u'com.olympus.raw-image': u"ORF",
-        u'com.canon.cr3-raw-image': u"CR3",
-        u'com.olympus.or-raw-image': u"ORF",
+        "public.heic": "HEIC",
+        "public.jpeg": "JPG",
+        "public.png": "PNG",
+        "com.apple.quicktime-movie": "MOV",
+        "com.adobe.raw-image": "DNG",
+        "com.canon.cr2-raw-image": "CR2",
+        "com.canon.crw-raw-image": "CRW",
+        "com.sony.arw-raw-image": "ARW",
+        "com.fuji.raw-image": "RAF",
+        "com.panasonic.rw2-raw-image": "RW2",
+        "com.nikon.nrw-raw-image": "NRF",
+        "com.pentax.raw-image": "PEF",
+        "com.nikon.raw-image": "NEF",
+        "com.olympus.raw-image": "ORF",
+        "com.canon.cr3-raw-image": "CR3",
+        "com.olympus.or-raw-image": "ORF",
     }
 
     PHOTO_VERSION_LOOKUP: Dict[VersionSize, str] = {
-        AssetVersionSize.ORIGINAL: u"resOriginal",
-        AssetVersionSize.ALTERNATIVE: u"resOriginalAlt",
-        AssetVersionSize.MEDIUM: u"resJPEGMed",
-        AssetVersionSize.THUMB: u"resJPEGThumb",
-        AssetVersionSize.ADJUSTED: u"resJPEGFull",
-        LivePhotoVersionSize.ORIGINAL: u"resOriginalVidCompl",
-        LivePhotoVersionSize.MEDIUM: u"resVidMed",
-        LivePhotoVersionSize.THUMB: u"resVidSmall",
+        AssetVersionSize.ORIGINAL: "resOriginal",
+        AssetVersionSize.ALTERNATIVE: "resOriginalAlt",
+        AssetVersionSize.MEDIUM: "resJPEGMed",
+        AssetVersionSize.THUMB: "resJPEGThumb",
+        AssetVersionSize.ADJUSTED: "resJPEGFull",
+        LivePhotoVersionSize.ORIGINAL: "resOriginalVidCompl",
+        LivePhotoVersionSize.MEDIUM: "resVidMed",
+        LivePhotoVersionSize.THUMB: "resVidSmall",
     }
 
     VIDEO_VERSION_LOOKUP: Dict[VersionSize, str] = {
-        AssetVersionSize.ORIGINAL: u"resOriginal",
-        AssetVersionSize.MEDIUM: u"resVidMed",
-        AssetVersionSize.THUMB: u"resVidSmall"
+        AssetVersionSize.ORIGINAL: "resOriginal",
+        AssetVersionSize.MEDIUM: "resVidMed",
+        AssetVersionSize.THUMB: "resVidSmall",
     }
 
     VERSION_FILENAME_SUFFIX_LOOKUP: Dict[VersionSize, str] = {
-        AssetVersionSize.MEDIUM: u"medium",
-        AssetVersionSize.THUMB: u"thumb",
-        LivePhotoVersionSize.MEDIUM: u"medium",
-        LivePhotoVersionSize.THUMB: u"thumb",
+        AssetVersionSize.MEDIUM: "medium",
+        AssetVersionSize.THUMB: "thumb",
+        LivePhotoVersionSize.MEDIUM: "medium",
+        LivePhotoVersionSize.THUMB: "thumb",
     }
 
     @property
     def id(self) -> str:
-        return typing.cast(str, self._master_record['recordName'])
+        return typing.cast(str, self._master_record["recordName"])
 
     @property
     def filename(self) -> str:
-        fields = self._master_record['fields']
-        if 'filenameEnc' in fields and 'value' in fields['filenameEnc']:
-            _filename = self._service.filename_cleaner(base64.b64decode(
-                fields['filenameEnc']['value']
-            ).decode('utf-8'))
+        fields = self._master_record["fields"]
+        if "filenameEnc" in fields and "value" in fields["filenameEnc"]:
+            _filename = self._service.filename_cleaner(
+                base64.b64decode(fields["filenameEnc"]["value"]).decode("utf-8")
+            )
             if self._service.file_match_policy == FileMatchPolicy.NAME_ID7:
                 _f, _e = os.path.splitext(_filename)
-                _a = base64.b64encode(self.id.encode('utf-8')).decode('ascii')[0:7]
+                _a = base64.b64encode(self.id.encode("utf-8")).decode("ascii")[0:7]
                 _filename = f"{_f}_{_a}{_e}"
             return _filename
 
         # Some photos don't have a filename.
         # In that case, just use the truncated fingerprint (hash),
         # plus the correct extension.
-        filename = re.sub('[^0-9a-zA-Z]', '_', self.id)[0:12]
-        return '.'.join([filename, self.item_type_extension])
+        filename = re.sub("[^0-9a-zA-Z]", "_", self.id)[0:12]
+        return ".".join([filename, self.item_type_extension])
 
     @property
     def size(self) -> int:
-        return typing.cast(int, self._master_record['fields']['resOriginalRes']['value']['size'])
+        return typing.cast(
+            int, self._master_record["fields"]["resOriginalRes"]["value"]["size"]
+        )
 
     @property
     def created(self) -> datetime:
@@ -638,8 +732,8 @@ class PhotoAsset(object):
     def asset_date(self) -> datetime:
         try:
             dt = datetime.fromtimestamp(
-                self._asset_record['fields']['assetDate']['value'] / 1000.0,
-                tz=pytz.utc)
+                self._asset_record["fields"]["assetDate"]["value"] / 1000.0, tz=pytz.utc
+            )
         except:
             dt = datetime.fromtimestamp(0)
         return dt
@@ -647,36 +741,38 @@ class PhotoAsset(object):
     @property
     def added_date(self) -> datetime:
         dt = datetime.fromtimestamp(
-            self._asset_record['fields']['addedDate']['value'] / 1000.0,
-            tz=pytz.utc)
+            self._asset_record["fields"]["addedDate"]["value"] / 1000.0, tz=pytz.utc
+        )
         return dt
 
     @property
     def dimensions(self) -> Tuple[int, int]:
-        return (self._master_record['fields']['resOriginalWidth']['value'],
-                self._master_record['fields']['resOriginalHeight']['value'])
+        return (
+            self._master_record["fields"]["resOriginalWidth"]["value"],
+            self._master_record["fields"]["resOriginalHeight"]["value"],
+        )
 
     @property
     def item_type(self) -> str:
-        fields = self._master_record['fields']
-        if 'itemType' not in fields or 'value' not in fields['itemType']:
-            return 'unknown'
-        item_type = self._master_record['fields']['itemType']['value']
+        fields = self._master_record["fields"]
+        if "itemType" not in fields or "value" not in fields["itemType"]:
+            return "unknown"
+        item_type = self._master_record["fields"]["itemType"]["value"]
         if item_type in self.ITEM_TYPES:
             return self.ITEM_TYPES[item_type]
-        if self.filename.lower().endswith(('.heic', '.png', '.jpg', '.jpeg')):
-            return 'image'
-        return 'movie'
+        if self.filename.lower().endswith((".heic", ".png", ".jpg", ".jpeg")):
+            return "image"
+        return "movie"
 
     @property
     def item_type_extension(self) -> str:
-        fields = self._master_record['fields']
-        if 'itemType' not in fields or 'value' not in fields['itemType']:
-            return 'unknown'
-        item_type = self._master_record['fields']['itemType']['value']
+        fields = self._master_record["fields"]
+        if "itemType" not in fields or "value" not in fields["itemType"]:
+            return "unknown"
+        item_type = self._master_record["fields"]["itemType"]["value"]
         if item_type in self.ITEM_TYPE_EXTENSIONS:
             return self.ITEM_TYPE_EXTENSIONS[item_type]
-        return 'unknown'
+        return "unknown"
 
     @property
     def versions(self) -> Dict[VersionSize, AssetVersion]:
@@ -691,12 +787,12 @@ class PhotoAsset(object):
 
             for key, prefix in typed_version_lookup.items():
                 f: Optional[Dict[str, Any]] = None
-                if '%sRes' % prefix in self._asset_record['fields']:
-                    f = self._asset_record['fields']
-                if not f and '%sRes' % prefix in self._master_record['fields']:
-                    f = self._master_record['fields']
+                if "%sRes" % prefix in self._asset_record["fields"]:
+                    f = self._asset_record["fields"]
+                if not f and "%sRes" % prefix in self._master_record["fields"]:
+                    f = self._master_record["fields"]
                 if f:
-                    version: Dict[str, Any] = {'filename': self.filename}
+                    version: Dict[str, Any] = {"filename": self.filename}
 
                     # width_entry = f.get('%sWidth' % prefix)
                     # if width_entry:
@@ -710,30 +806,38 @@ class PhotoAsset(object):
                     # else:
                     #     version['height'] = None
 
-                    size_entry = f.get('%sRes' % prefix)
+                    size_entry = f.get("%sRes" % prefix)
                     if size_entry:
-                        version['size'] = size_entry['value']['size']
-                        version['url'] = size_entry['value']['downloadURL']
+                        version["size"] = size_entry["value"]["size"]
+                        version["url"] = size_entry["value"]["downloadURL"]
                     else:
                         raise ValueError(f"Expected {prefix}Res, but missing it")
                         # version['size'] = None
                         # version['url'] = None
 
-                    type_entry = f.get('%sFileType' % prefix)
+                    type_entry = f.get("%sFileType" % prefix)
                     if type_entry:
-                        version['type'] = type_entry['value']
+                        version["type"] = type_entry["value"]
                     else:
                         raise ValueError(f"Expected {prefix}FileType, but missing it")
                         # version['type'] = None
 
                     # Change live photo movie file extension to .MOV
-                    if (self.item_type == "image" and
-                        version['type'] == "com.apple.quicktime-movie"):
-                        version['filename'] = self._service.lp_filename_generator(self.filename) # without size
+                    if (
+                        self.item_type == "image"
+                        and version["type"] == "com.apple.quicktime-movie"
+                    ):
+                        version["filename"] = self._service.lp_filename_generator(
+                            self.filename
+                        )  # without size
                     else:
                         # for non live photo movie, try to change file type to match asset type
                         _f, _e = os.path.splitext(version["filename"])
-                        version["filename"] = _f + "." + self.ITEM_TYPE_EXTENSIONS.get(version["type"], _e[1:])
+                        version["filename"] = (
+                            _f
+                            + "."
+                            + self.ITEM_TYPE_EXTENSIONS.get(version["type"], _e[1:])
+                        )
 
                     # add size suffix
                     if key in self.VERSION_FILENAME_SUFFIX_LOOKUP:
@@ -741,10 +845,24 @@ class PhotoAsset(object):
                         _f, _e = os.path.splitext(version["filename"])
                         version["filename"] = _f + f"-{_size_suffix}" + _e
 
-                    _versions[key] = AssetVersion(version["filename"], version['size'], version['url'], version['type'])
+                    _versions[key] = AssetVersion(
+                        version["filename"],
+                        version["size"],
+                        version["url"],
+                        version["type"],
+                    )
 
             # swap original & alternative according to swap_raw_policy
-            if AssetVersionSize.ALTERNATIVE in _versions and (("raw" in _versions[AssetVersionSize.ALTERNATIVE].type and self._service.raw_policy == RawTreatmentPolicy.AS_ORIGINAL) or ("raw" in _versions[AssetVersionSize.ORIGINAL].type and self._service.raw_policy == RawTreatmentPolicy.AS_ALTERNATIVE)):
+            if AssetVersionSize.ALTERNATIVE in _versions and (
+                (
+                    "raw" in _versions[AssetVersionSize.ALTERNATIVE].type
+                    and self._service.raw_policy == RawTreatmentPolicy.AS_ORIGINAL
+                )
+                or (
+                    "raw" in _versions[AssetVersionSize.ORIGINAL].type
+                    and self._service.raw_policy == RawTreatmentPolicy.AS_ALTERNATIVE
+                )
+            ):
                 _a = copy.copy(_versions[AssetVersionSize.ALTERNATIVE])
                 _o = copy.copy(_versions[AssetVersionSize.ORIGINAL])
                 _versions[AssetVersionSize.ALTERNATIVE] = _o
@@ -755,13 +873,7 @@ class PhotoAsset(object):
         return self._versions
 
     def download(self, url: str) -> Response:
-        return self._service.session.get(
-            url,
-            stream=True
-        )
+        return self._service.session.get(url, stream=True)
 
     def __repr__(self) -> str:
-        return "<%s: id=%s>" % (
-            type(self).__name__,
-            self.id
-        )
+        return "<%s: id=%s>" % (type(self).__name__, self.id)

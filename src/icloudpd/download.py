@@ -5,7 +5,6 @@ import os
 import socket
 import time
 import datetime
-from typing import Any, Dict
 from requests import Response
 from tzlocal import get_localzone
 from requests.exceptions import ConnectionError  # pylint: disable=redefined-builtin

@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 """Main script that uses Click to parse command-line arguments"""
 from __future__ import print_function
-import getpass
 import typing
 
-from click import Option, Parameter
 from icloudpd.counter import Counter
 from icloudpd import constants
 from icloudpd import exif_datetime
@@ -28,7 +26,6 @@ from typing import (
     Callable,
     Dict,
     Iterable,
-    List,
     NoReturn,
     Optional,
     Sequence,

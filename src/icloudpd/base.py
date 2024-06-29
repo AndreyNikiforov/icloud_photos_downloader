@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Main script that uses Click to parse command-line arguments"""
+
+from multiprocessing import freeze_support  # fmt: skip
+freeze_support()  # fmt: skip  # fixing tqdm on macos
+
 from __future__ import print_function
 import typing
 
@@ -42,7 +46,6 @@ import datetime
 import time
 import sys
 import os
-from multiprocessing import freeze_support
 
 from pyicloud_ipd.utils import (
     compose,
@@ -53,8 +56,6 @@ from pyicloud_ipd.utils import (
     store_password_in_keyring,
 )
 from pyicloud_ipd.version_size import AssetVersionSize, LivePhotoVersionSize
-
-freeze_support()  # fixing tqdm on macos
 
 
 def build_filename_cleaner(
@@ -592,7 +593,6 @@ def main(
                 ),
                 directory,
                 username,
-                password,
                 auth_only,
                 cookie_directory,
                 size,
@@ -1020,7 +1020,6 @@ def core(
     downloader: Callable[[PyiCloudService], Callable[[Counter, PhotoAsset], bool]],
     directory: Optional[str],
     username: str,
-    password: Optional[str],
     auth_only: bool,
     cookie_directory: str,
     size: Sequence[AssetVersionSize],

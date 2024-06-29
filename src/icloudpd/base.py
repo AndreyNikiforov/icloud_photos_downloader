@@ -4,7 +4,6 @@
 from multiprocessing import freeze_support  # fmt: skip
 freeze_support()  # fmt: skip  # fixing tqdm on macos
 
-from __future__ import print_function
 import typing
 
 from icloudpd.counter import Counter

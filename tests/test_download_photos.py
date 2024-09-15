@@ -773,6 +773,71 @@ class DownloadPhotoTestCase(TestCase):
 
                     assert result.exit_code == 0
 
+    def test_adjusted_size_fallback_to_original(self) -> None:
+        base_dir = os.path.join(self.fixtures_path, inspect.stack()[0][3])
+
+        with mock.patch("icloudpd.download.download_media") as dp_patched:
+            dp_patched.return_value = True
+
+            with mock.patch("icloudpd.download.os.utime") as ut_patched:
+                ut_patched.return_value = None
+
+                with mock.patch.object(
+                    PhotoAsset, "versions", new_callable=mock.PropertyMock
+                ) as pa:
+                    pa.return_value = {
+                        AssetVersionSize.ORIGINAL: AssetVersion("IMG_7409.JPG", 1, "http", "jpeg"),
+                        # AssetVersionSize.ADJUSTED: AssetVersion("IMG_7409.JPG", 2, "ftp", "movie"),
+                    }
+
+                    data_dir, result = run_icloudpd_test(
+                        self.assertEqual,
+                        self.vcr_path,
+                        base_dir,
+                        "listing_photos.yml",
+                        [],
+                        [],
+                        [
+                            "--username",
+                            "jdoe@gmail.com",
+                            "--password",
+                            "password1",
+                            "--recent",
+                            "1",
+                            "--size",
+                            "adjusted",
+                            "--size",
+                            "alternative",
+                            "--no-progress-bar",
+                            "--threads-num",
+                            "1",
+                        ],
+                    )
+                    self.assertIn(
+                        "DEBUG    Looking up all photos and videos from album All Photos...",
+                        self._caplog.text,
+                    )
+                    self.assertIn(
+                        f"INFO     Downloading the first adjusted,alternative photo or video to {data_dir} ...",
+                        self._caplog.text,
+                    )
+                    self.assertIn(
+                        f"DEBUG    Downloading {os.path.join(data_dir, os.path.normpath('2018/07/31/IMG_7409.JPG'))}",
+                        self._caplog.text,
+                    )
+                    self.assertIn("INFO     All photos have been downloaded", self._caplog.text)
+                    dp_patched.assert_called_once_with(
+                        ANY,
+                        False,
+                        ANY,
+                        ANY,
+                        f"{os.path.join(data_dir, os.path.normpath('2018/07/31/IMG_7409.JPG'))}",
+                        ANY,
+                        AssetVersionSize.ORIGINAL,
+                    )
+
+                    assert result.exit_code == 0
+
     def test_force_size(self) -> None:
         base_dir = os.path.join(self.fixtures_path, inspect.stack()[0][3])
 

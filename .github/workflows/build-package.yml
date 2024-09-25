@@ -165,10 +165,85 @@ jobs:
     outputs:
       expected_version: ${{steps.get_version.outputs.expected_version}}
   
+  build_linux_dep_apt:
+    # 24.02 gives futex error during apt: https://github.com/actions/runner-images/issues/9977
+    runs-on: ubuntu-24.04
+    name: Build Linux Dep ${{ matrix.platform[1] }} Debian
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - [
+            "linux/arm64",
+            "arm64",
+          ]
+          - [
+            "linux/arm/v7",
+            "arm32v7",
+          ]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download version info
+      uses: actions/download-artifact@v4
+      with:
+        name: icloudpd-${{github.sha}}-version-info
+        path: |
+          src/foundation
+
+    - name: Set up QEMU
+      if: matrix.platform[1] != 'amd64'
+      uses: docker/setup-qemu-action@v3
+
+    - uses: docker/setup-buildx-action@v3
+      id: setup
+
+    - name: Cache Build
+      uses: actions/cache@v4
+      id: cache
+      with:
+        # if the list or anything in these folders expected to change, then cache needs to be cleared and rebuilt, because it is keyed only by pyproject.toml hash
+        path: .cache
+        key: build-${{ matrix.platform[1] }}-${{ hashFiles('pyproject.toml','Dockerfile.dep','Dockerfile.build') }}-${{ github.run_id }}
+        restore-keys: |
+          build-${{ matrix.platform[1] }}-
+      
+    - name: Create folders on cache miss
+      run: |
+        mkdir -p .cache/var/cache/apt
+        mkdir -p .cache/var/lib/apt
+        mkdir -p .cache/root/.cache/pip
+        mkdir -p .cache/root/.distrib/rust
+        mkdir -p .cache/root/.cargo/registry
+      
+    - name: Inject docker cache
+      uses: reproducible-containers/buildkit-cache-dance@v3.1.2
+      with:
+        cache-map: |
+          {
+            ".cache/var/cache/apt": "/var/cache/apt",
+            ".cache/var/lib/apt": "/var/lib/apt",
+            ".cache/root/.cache/pip": "/root/.cache/pip",
+            ".cache/root/.cargo/registry": "/root/.cargo/registry",
+            ".cache/root/.distrib/rust": "/root/.distrib/rust"
+          }
+
+    - name: Build
+      uses: docker/build-push-action@v6
+      with:
+        push: false
+        platforms: ${{ matrix.platform[0] }}
+        # do not cache layers
+        file: Dockerfile.dep
+        outputs: type=local,dest=dist
+        provenance: false
+        context: .
+  
   build_linux_apt:
     # 24.02 gives futex error during apt: https://github.com/actions/runner-images/issues/9977
     runs-on: ubuntu-24.04
     name: Build Linux ${{ matrix.platform[1] }} Debian
+    needs: build-linux-dep-apt
     strategy:
       fail-fast: false
       matrix:
@@ -208,7 +283,7 @@ jobs:
       with:
         # if the list or anything in these folders expected to change, then cache needs to be cleared and rebuilt, because it is keyed only by pyproject.toml hash
         path: .cache
-        key: build-${{ matrix.platform[1] }}-${{ hashFiles('pyproject.toml','Dockerfile.build') }}
+        key: build-${{ matrix.platform[1] }}-${{ hashFiles('pyproject.toml','Dockerfile.dep','Dockerfile.build') }}-${{ github.run_id }}
         restore-keys: |
           build-${{ matrix.platform[1] }}-
       

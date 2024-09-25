@@ -1,9 +1,8 @@
-from functools import reduce
 import typing
 from enum import Enum
 from typing import Any, Callable, Dict, NewType, Optional
 
-from foundation.core import apply, curry3, identity, pipe
+from foundation.core import apply_reverse, curry3, pipe
 from foundation.core.optional import bind, lift3
 
 _MasterRecordNode = NewType("_MasterRecordNode", Dict[str, Any])
@@ -93,7 +92,7 @@ def _file_type_value(value: _FileTypeNode) -> Optional[_FileType]:
 
 
 _size = pipe(
-    apply(_res_node),
+    apply_reverse(_res_node),
     pipe(
         bind(_res_value_node),
         bind(_res_value_size),
@@ -101,7 +100,7 @@ _size = pipe(
 )
 
 _url = pipe(
-    apply(_res_node),
+    apply_reverse(_res_node),
     pipe(
         bind(_res_value_node),
         bind(_res_value_url),
@@ -109,7 +108,7 @@ _url = pipe(
 )
 
 _file_type = pipe(
-    apply(_file_type_node),
+    apply_reverse(_file_type_node),
     bind(_file_type_value),
 )
 
@@ -132,15 +131,12 @@ class AssetVariant:
 def _build_entry(file_type: _FileType, size: _ResValueSize, url: _ResValueURL) -> AssetVariant:
     return AssetVariant(file_type, size, url)
 
-_build_entry_c = curry3(lift3(_build_entry))
+
+_build_entry_l = lift3(_build_entry)
+_build_entry_c = curry3(_build_entry_l)
 
 
-# _t = reduce(lambda t,s: apply(t,s), [
-#     _file_type,
-#     _size,
-#     _url
-# ], _build_entry_c)
-
+# bvbnjhkjbnbngbg
 # def _extract_size_and_url(
 #     prefix: str,
 #     fields: Dict[str, Any],

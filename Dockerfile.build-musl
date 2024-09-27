@@ -12,7 +12,7 @@ WORKDIR /app
 RUN \
   --mount=type=cache,target=/var/cache/apk,sharing=shared \
   apk update && \
-  apk add git curl binutils gcc libc-dev libffi-dev zlib-dev openssl-dev tzdata bash patchelf python3-dev musl-dev pkgconfig cargo
+  apk add git curl binutils gcc libc-dev libffi-dev zlib-dev libressl-dev tzdata bash patchelf python3-dev musl-dev pkgconfig cargo
 # from https://cryptography.io/en/latest/installation/#building-cryptography-on-linux
 # If you get an error with openssl-dev you may have to use libressl-dev.
 # cargo 

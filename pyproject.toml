@@ -23,6 +23,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
+    # indirect dependency; needs pinning as 43.0.1 hangs compiling for arm32v7 Alpine/Debian
+    "cryptography==43.0.0",
     "requests==2.31.0",
     "schema==0.7.5",
     "click==8.1.6",

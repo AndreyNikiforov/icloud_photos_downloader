@@ -5,7 +5,7 @@
 # rust links from https://forge.rust-lang.org/infra/other-installation-methods.html#standalone-installers
 
 # map source image to base
-FROM python:3.12-alpine3.19 AS base
+FROM python:3.12-alpine3.19@sha256:1211782a3ba387d755e0e50cbd40cf771a731d12702e55d46fb74eb2c0254524 AS base
 ARG TARGETARCH
 ARG TARGETVARIANT
 WORKDIR /app

@@ -38,7 +38,7 @@ RUN \
     --mount=type=cache,target=/root/.cache/pip,sharing=shared \
     python3 -m venv .venv && \
     . .venv/bin/activate && \
-    pip3 install --disable-pip-version-check cryptography
+    pip3 install --disable-pip-version-check cryptography==43.0.0
 
 FROM scratch
 WORKDIR /

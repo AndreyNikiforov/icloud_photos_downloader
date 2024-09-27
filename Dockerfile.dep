@@ -57,7 +57,7 @@ RUN \
     . .venv/bin/activate && \
     echo "List pip cache..." && \
     pip3 cache list && \
-    pip3 install --disable-pip-version-check cryptography
+    pip3 install --disable-pip-version-check cryptography==43.0.0
 
 FROM scratch
 WORKDIR /

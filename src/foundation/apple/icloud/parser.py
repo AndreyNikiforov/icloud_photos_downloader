@@ -1,9 +1,9 @@
 import typing
 from abc import abstractmethod
 from enum import Enum
-from typing import Any, Callable, Mapping, NewType, Optional, Protocol, TypeVar
+from typing import Any, Callable, Mapping, NewType, Optional, Protocol, Tuple, TypeVar
 
-from foundation.core import apply_reverse, curry2, curry3, pipe
+from foundation.core import apply_reverse, compose, curry2, curry3, fst, pipe, snd
 from foundation.core.optional import bind, lift3
 
 _Key = NewType("_Key", str)
@@ -19,30 +19,27 @@ _ResValueURL = NewType("_ResValueURL", str)
 _FileTypeNode = NewType("_FileTypeNode", Mapping[_Key, Any])
 _FileType = NewType("_FileType", str)
 
-
-class _ResourceFieldName(Enum):
-    ORIGINAL = _Key("resOriginalRes")
-    ALTERNATIVE = _Key("resOriginalAltRes")
-    MEDIUM = _Key("resJPEGMedRes")
-    THUMB = _Key("resJPEGThumbRes")
-    ADJUSTED = _Key("resJPEGFullRes")
-    LIVE_ORIGINAL = _Key("resOriginalVidComplRes")
-    VIDEO_MEDIUM = _Key("resVidMedRes")
-    VIDEO_SMALL = _Key("resVidSmallRes")
-
-    def __str__(self) -> str:
-        return self.name
+_ResourceKey = NewType("_ResourceKey", _Key)
+_FileTypeKey = NewType("_FileTypeKey", _Key)
 
 
-class _FileTypeFieldName(Enum):
-    ORIGINAL = _Key("resOriginalFileType")
-    ALTERNATIVE = _Key("resOriginalAltFileType")
-    MEDIUM = _Key("resJPEGMedFileType")
-    THUMB = _Key("resJPEGThumbFileType")
-    ADJUSTED = _Key("resJPEGFullFileType")
-    LIVE_ORIGINAL = _Key("resOriginalVidComplFileType")
-    VIDEO_MEDIUM = _Key("resVidMedFileType")
-    VIDEO_SMALL = _Key("resVidSmallFileType")
+class _VariantFieldName(Enum):
+    ORIGINAL = (_ResourceKey(_Key("resOriginalRes")), _FileTypeKey(_Key("resOriginalFileType")))
+    ALTERNATIVE = (
+        _ResourceKey(_Key("resOriginalAltRes")),
+        _FileTypeKey(_Key("resOriginalAltFileType")),
+    )
+    MEDIUM = (_ResourceKey(_Key("resJPEGMedRes")), _FileTypeKey(_Key("resJPEGMedFileType")))
+    THUMB = (_ResourceKey(_Key("resJPEGThumbRes")), _FileTypeKey(_Key("resJPEGThumbFileType")))
+    ADJUSTED = (_ResourceKey(_Key("resJPEGFullRes")), _FileTypeKey(_Key("resJPEGFullFileType")))
+    LIVE_ORIGINAL = (
+        _ResourceKey(_Key("resOriginalVidComplRes")),
+        _FileTypeKey(
+            _Key("resOriginalVidComplFileType"),
+        ),
+    )
+    VIDEO_MEDIUM = (_ResourceKey(_Key("resVidMedRes")), _FileTypeKey(_Key("resVidMedFileType")))
+    VIDEO_SMALL = (_ResourceKey(_Key("resVidSmallRes")), _FileTypeKey(_Key("resVidSmallFileType")))
 
     def __str__(self) -> str:
         return self.name
@@ -89,11 +86,15 @@ _attr_c = curry2(_attr)
 _master_fields_node: Callable[[_MasterRecordNode], Optional[_FieldsNode]] = _attr_c(_FILEDS_NAME)
 # assert _master_fields_node({"fields": "bar"}) == "bar"
 
+_field_key = typing.cast(
+    Callable[[_VariantFieldName], Tuple[_ResourceKey, _FileTypeKey]], _enum_value
+)
+
 # typed version of getting field key from enum
-_res_field_name = typing.cast(Callable[[_ResourceFieldName], _Key], _enum_value)
+_res_field_name = pipe(_field_key, fst)
 
 # extracting resource node out of fields node
-_res_node: Callable[[_ResourceFieldName], Callable[[_FieldsNode], Optional[_ResNode]]] = pipe(
+_res_node: Callable[[_VariantFieldName], Callable[[_FieldsNode], Optional[_ResNode]]] = pipe(
     _res_field_name, _attr_c
 )
 # assert _res_node(_ResourceFieldName.ORIGINAL)({"resOriginalRes": {"bar": "baz"}}) == {"bar": "baz"}
@@ -113,11 +114,11 @@ _res_value_url: Callable[[_ResValueNode], Optional[_ResValueURL]] = _attr_c(_URL
 
 
 # typed version of getting field key from enum
-_file_type_field_name = typing.cast(Callable[[_FileTypeFieldName], _Key], _enum_value)
+_file_type_field_name = pipe(_field_key, snd)
 
-_file_type_node: Callable[
-    [_FileTypeFieldName], Callable[[_FieldsNode], Optional[_FileTypeNode]]
-] = pipe(_file_type_field_name, _attr_c)
+_file_type_node: Callable[[_VariantFieldName], Callable[[_FieldsNode], Optional[_FileTypeNode]]] = (
+    pipe(_file_type_field_name, _attr_c)
+)
 
 _file_type_value: Callable[[_FileTypeNode], Optional[_FileType]] = _attr_c(_VALUE_FILED_NAME)
 
@@ -191,7 +192,12 @@ _build_entry_c = curry3(_build_entry_l)
 # h is (->) e
 # (a -> b) -> (c -> d -> e -> a) -> (c -> d -> e -> b)
 
-# _fmap2x = compose(compose, compose)
+_compose_c = curry2(compose)
+
+_pipe_c = curry2(pipe)
+
+_compose2x = _compose_c(_compose_c)(_compose_c)
+# _assert_version = _compose2x(_build_entry_c)(_file_type)
 
 # def _extract_size_and_url(
 #     prefix: str,

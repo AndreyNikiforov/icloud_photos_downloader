@@ -419,8 +419,7 @@ jobs:
           dist/icloudpd-0.0.1234567890-*.whl
         
   build_linux_apk:
-    # 24.02 gives futex error during apt: https://github.com/actions/runner-images/issues/9977
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: Build Linux ${{ matrix.platform[1] }} Alpine
     strategy:
       fail-fast: false

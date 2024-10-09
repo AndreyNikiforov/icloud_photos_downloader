@@ -1,7 +1,17 @@
 import typing
-from abc import abstractmethod
 from enum import Enum
-from typing import Any, Callable, Mapping, NewType, Optional, Protocol, Tuple, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    Mapping,
+    NewType,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
 from foundation.core import (
     apply_reverse,
@@ -19,30 +29,41 @@ from foundation.core import (
 from foundation.core.optional import bind, lift3
 
 _Key = NewType("_Key", str)
-_Tout = TypeVar("_Tout", covariant=True)
+_T_co = TypeVar("_T_co", covariant=True)
+_T_contra = TypeVar("_T_contra", contravariant=True)
+_T_inv = TypeVar("_T_inv")
 
+# rfc8259
+# null is None/Optional monad
+# true/false combined as bool types
+_JBool = bool
+_JString = str
+_JArray = Sequence["_JValue"]
+_JObject = Mapping[str, "_JValue"]
+_JNumber = Union[int, float]
+_JValue = Union[_JBool, _JObject, _JArray, _JNumber, _JString]
 
-class _MappedByKey(Protocol[_Tout]):
-    @abstractmethod
-    def get(self, name: _Key) -> Optional[_Tout]:
-        raise NotImplementedError
+# Optional[_JValue] is
+# class _Parser(Protocol):
+#     def __call__(self, value: _JValue) -> Tuple[Result, _JValue]:
 
 
 # Json typed representation
-_JsonObject = _MappedByKey["_JsonNode"]
+_JsonObject = Mapping[_Key, "_JsonNode"]
 _JsonValue = Union[str, int, float]
 _JsonNode = Union[_JsonValue, _JsonObject]
 
-_MasterRecordNode = NewType("_MasterRecordNode", Mapping[_Key, Any])
 
-_FieldsNode = NewType("_FieldsNode", Mapping[_Key, Any])
+_MasterRecordNode = NewType("_MasterRecordNode", _JsonObject)
 
-_ResNode = NewType("_ResNode", Mapping[_Key, Any])
-_ResValueNode = NewType("_ResValueNode", Mapping[_Key, Any])
+_FieldsNode = NewType("_FieldsNode", _JsonObject)
+
+_ResNode = NewType("_ResNode", _JsonObject)
+_ResValueNode = NewType("_ResValueNode", _JsonObject)
 _ResValueSize = NewType("_ResValueSize", int)
 _ResValueURL = NewType("_ResValueURL", str)
 
-_FileTypeNode = NewType("_FileTypeNode", Mapping[_Key, Any])
+_FileTypeNode = NewType("_FileTypeNode", _JsonObject)
 _FileType = NewType("_FileType", str)
 
 _ResourceKey = NewType("_ResourceKey", _Key)
@@ -79,8 +100,8 @@ _URL_FILED_NAME = _Key("downloadURL")
 
 def _attr(  # cannot make it generic
     key: _Key,
-    mapped: _MappedByKey[Any],
-) -> Optional[_Tout]:
+    mapped: _JsonObject,
+) -> Optional[_JsonNode]:
     """Get item on a Mapped by Key
 
     >>> _attr(_Key("foo"), {"foo": "bar"}) == "bar"
@@ -91,9 +112,6 @@ def _attr(  # cannot make it generic
     """
     return mapped.get(key)
 
-
-_Tin = TypeVar("_Tin")
-_Tin2 = TypeVar("_Tin2")
 
 # mypy for functions with type params is not working
 # def _match(ty: Type[_Tin], input: Union[_Tin, _Tin2]) -> Optional[_Tin]:
@@ -144,6 +162,38 @@ def _match_jv(input: Union[_JsonValue, Any]) -> Optional[_JsonValue]:
     return None
 
 
+def _match(ty: Type[_T_inv]) -> Callable[[_T_inv], Optional[_T_inv]]:
+    """match json object
+    >>> _match_jv({"foo": "bar"}) == None
+    True
+    >>> _match_jv(5)
+    5
+    >>> _match_jv(6.1)
+    6.1
+    >>> _match_jv("abc")
+    'abc'
+    """
+
+    def _intern(input: _T_inv) -> Optional[_T_inv]:
+        if isinstance(input, ty):
+            return typing.cast(Optional[_T_inv], input)
+        return None
+
+    return _intern
+
+
+def _match_name(
+    input: Union[Tuple[_ResourceKey, _FileTypeKey], Any],
+) -> Optional[Tuple[_ResourceKey, _FileTypeKey]]:
+    """match filed name pair tuple
+    >>> _match_name((_ResourceKey(_Key("abc")), _FileTypeKey(_Key("def")))) == ("abc", "def")
+    True
+    """
+    if isinstance(input, tuple) and isinstance(input[0], str) and isinstance(input[1], str):
+        return typing.cast(Tuple[_ResourceKey, _FileTypeKey], input)
+    return None
+
+
 # end hard coded impl
 
 _attr_jo: Callable[[_Key, _JsonObject], Optional[_JsonObject]] = pipe2(_attr, bind(_match_jo))
@@ -163,37 +213,104 @@ def _enum_value(  # cannot make it generic
 
 
 # typed version for _VariantFieldName
-_field_key = typing.cast(
-    Callable[[_VariantFieldName], Tuple[_ResourceKey, _FileTypeKey]], _enum_value
-)
+# _field_key = typing.cast(
+#     Callable[[_VariantFieldName], Tuple[_ResourceKey, _FileTypeKey]], _enum_value
+# )
+
+
+# no generic num.value is known and functional composition seems
+# to require unsafe casting and explicit checks
+def _field_key(input: _VariantFieldName) -> Tuple[_ResourceKey, _FileTypeKey]:
+    return input.value
 
 
 _attr_c = curry2(_attr)
 
-_master_fields_node: Callable[[_MasterRecordNode], Optional[_FieldsNode]] = _attr_c(_FILEDS_NAME)
-# assert _master_fields_node({"fields": "bar"}) == "bar"
+
+def _from_master_record(input: _MasterRecordNode) -> _JsonObject:
+    return typing.cast(_JsonObject, input)
+
+
+def _to_fields_node(input: _JsonObject) -> _FieldsNode:
+    return _FieldsNode(input)
+
+
+def _from_fields_node(input: _FieldsNode) -> _JsonObject:
+    return typing.cast(_JsonObject, input)
+
+
+def _to_res_node(input: _JsonObject) -> _ResNode:
+    return _ResNode(input)
+
+
+def _to_res_value_node(input: _JsonObject) -> _ResValueNode:
+    return _ResValueNode(input)
+
+
+def _to_res_size_value(input: int) -> _ResValueSize:
+    return _ResValueSize(input)
+
+
+def _to_res_url_value(input: str) -> _ResValueURL:
+    return _ResValueURL(input)
+
+
+_master_fields_node: Callable[[_MasterRecordNode], Optional[_FieldsNode]] = pipe(
+    _attr_jo_c(_FILEDS_NAME), bind(_to_fields_node)
+)
+assert _master_fields_node(
+    _MasterRecordNode({_Key("fields"): {_Key("bar"): "baz"}})
+) == _FieldsNode({_Key("bar"): "baz"})
+assert _master_fields_node(_MasterRecordNode({_Key("fields"): "bar"})) is None
 
 # typed version of getting field key from enum
 _res_field_name = pipe(_field_key, fst)
 # assert _res_field_name(_VariantFieldName.ORIGINAL) == "resOriginalRes"
 
+_lift = pipe(_from_fields_node, _to_res_node)
+
+
+# cannot figure out how to do that with composition
+def _y(key: _ResourceKey) -> Callable[[_FieldsNode], Optional[_ResNode]]:
+    def _intern(field: _FieldsNode) -> Optional[_ResNode]:
+        _fun = _attr_jo_c(key)
+        return pipe(_fun, bind(_to_res_node))(field)
+
+    return _intern
+
+
 # extracting resource node out of fields node
+# _res_node: Callable[[_VariantFieldName], Callable[[_FieldsNode], Optional[_ResNode]]] = pipe(
 _res_node: Callable[[_VariantFieldName], Callable[[_FieldsNode], Optional[_ResNode]]] = pipe(
-    _res_field_name, _attr_c
+    _res_field_name, _y
 )
+
+# _res_node: Callable[[_VariantFieldName], Callable[[_FieldsNode], Optional[_ResNode]]] = pipe(
+#     _res_field_name, _attr_jo_c
+# )
 # assert _res_node(_VariantFieldName.ORIGINAL)({"resOriginalRes": {"bar": "baz"}}) == {"bar": "baz"}
 
 # extracting resource value node out of resource node
-_res_value_node: Callable[[_ResNode], Optional[_ResValueNode]] = _attr_c(_VALUE_FILED_NAME)
+_res_value_node: Callable[[_ResNode], Optional[_ResValueNode]] = pipe(
+    _attr_jo_c(_VALUE_FILED_NAME), bind(_to_res_value_node)
+)
 # assert _res_value_node({"value": {"bar": "baz"}}) == {"bar": "baz"}
 
 # extracting resource value size out of resource value node
-_res_value_size: Callable[[_ResValueNode], Optional[_ResValueSize]] = _attr_c(_SIZE_FILED_NAME)
+_res_value_size: Callable[[_ResValueNode], Optional[_ResValueSize]] = pipe(
+    _attr_jv_c(_SIZE_FILED_NAME),
+    pipe(
+        bind(_match(int)),
+        bind(_to_res_size_value),
+    ),
+)
 # assert _res_value_size({"size": 123}) == 123
 
 
 # extracting resource value size out of resource value node
-_res_value_url: Callable[[_ResValueNode], Optional[_ResValueURL]] = _attr_c(_URL_FILED_NAME)
+_res_value_url: Callable[[_ResValueNode], Optional[_ResValueURL]] = pipe(
+    _attr_jv_c(_URL_FILED_NAME), bind(_to_res_url_value)
+)
 # assert _res_value_url({"downloadURL": "abc"}) == "abc"
 
 

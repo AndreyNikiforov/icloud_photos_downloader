@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 version="1.27.4"
-name = "icloudpd"
+name = "andreynikiforov-icloudpd"
 description = "icloudpd is a command-line tool to download photos and videos from iCloud."
 readme = "README_PYPI.md"
 requires-python = ">=3.9,<3.14"

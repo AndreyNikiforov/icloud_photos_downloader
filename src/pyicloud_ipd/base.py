@@ -177,10 +177,11 @@ class PyiCloudService:
         login_successful = False
         if self.session_data.get("session_token") and not force_refresh:
             LOGGER.debug("Checking session token validity")
-            try:
-                self.data = self._validate_token()
+            new_token = self._validate_token()
+            if new_token:
+                self.data = new_token
                 login_successful = True
-            except PyiCloudAPIResponseException:
+            else:
                 LOGGER.debug("Invalid authentication token, will log in from scratch.")
 
         if not login_successful:
@@ -345,17 +346,17 @@ class PyiCloudService:
             msg = "Invalid email/password combination."
             raise PyiCloudFailedLoginException(msg, error) from error
 
-    def _validate_token(self) -> Dict[str, Any]:
+    def _validate_token(self) -> Dict[str, Any] | None:
         """Checks if the current access token is still valid."""
         LOGGER.debug("Checking session token validity")
-        try:
-            req = self.session.post("%s/validate" % self.SETUP_ENDPOINT, data="null")
+        req = self.session.post("%s/validate" % self.SETUP_ENDPOINT, data="null")
+        if req.status_code == 421:
+            LOGGER.debug("Invalid authentication token")
+            return None
+        else:
             LOGGER.debug("Session token is still valid")
             result: Dict[str, Any] = req.json()
             return result
-        except PyiCloudAPIResponseException as err:
-            LOGGER.debug("Invalid authentication token")
-            raise err
 
     def _get_auth_headers(self, overrides: Optional[Dict[str, str]]=None) -> Dict[str, str]:
         headers = {

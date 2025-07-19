@@ -89,31 +89,10 @@ class PyiCloudSession(Session):
 
         if not response.ok and (
             content_type not in json_mimetypes
-            or response.status_code in [421, 450, 500]
+            or response.status_code in [450, 500]
         ):
-            try:
-                # pylint: disable=protected-access
-                fmip_url = self.service._get_webservice_url("findme")
-                if (
-                    has_retried is None
-                    and response.status_code in [421, 450, 500]
-                    and fmip_url in url
-                ):
-                    # Handle re-authentication for Find My iPhone
-                    LOGGER.debug("Re-authenticating Find My iPhone service")
-                    try:
-                        # If 450, authentication requires a full sign in to the account
-                        service = None if response.status_code == 450 else "find"
-                        self.service.authenticate(True, service)
 
-                    except PyiCloudAPIResponseException:
-                        LOGGER.debug("Re-authentication failed")
-                    kwargs["retried"] = True
-                    return self.request(method, url, **kwargs)
-            except Exception:
-                pass
-
-            if has_retried is None and response.status_code in [421, 450, 500]:
+            if has_retried is None and response.status_code in [450, 500]:
                 api_error = PyiCloudAPIResponseException(
                     response.reason, str(response.status_code), True
                 )
@@ -190,7 +169,7 @@ class PyiCloudSession(Session):
                 reason + ".  Please wait a few minutes then try again."
                 "The remote servers might be trying to throttle requests."
             )
-        if code in ["421", "450", "500"]:
+        if code in ["450", "500"]:
             reason = "Authentication required for Account."
 
         api_error = PyiCloudAPIResponseException(reason, code)
